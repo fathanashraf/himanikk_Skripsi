@@ -234,3 +234,11 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
     });
 })
 ;
+
+
+Route::post('/deploy', function() {
+    if ($_SERVER['HTTP_X_GITHUB_EVENT'] !== 'push') abort(403);
+    
+    shell_exec('cd /app && git pull origin main && composer install --no-dev --optimize-autoloader && npm ci && npm run build && php artisan config:cache && php artisan route:cache');
+    return 'Deployed!';
+});
