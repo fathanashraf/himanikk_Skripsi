@@ -33,11 +33,16 @@
                     <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black leading-tight">
                         <span class="block bg-gradient-to-r from-white to-emerald-100 
                             dark:from-slate-900 dark:to-emerald-400 bg-clip-text text-transparent 
-                            drop-shadow-xl mb-3">HIMANIKKA</span>
-                        <span class="text-lg md:text-xl lg:text-2xl font-normal bg-gradient-to-r 
-                            from-emerald-400 to-cyan-400 dark:from-emerald-500 dark:to-cyan-500 
-                            bg-clip-text text-transparent drop-shadow tracking-wide">{{ $profils->sejarah ?? 'Himpunan Mahasiswa Informatika Unggul' }}</span>
+                            drop-shadow-xl mb-3">{{ $profils->singkatan ?? 'HIMANIKA' }}</span>
                     </h1>
+                    <p class="text-lg md:text-xl lg:text-2xl font-semibold max-w-2xl mx-auto lg:mx-0 
+          bg-gradient-to-r from-slate-50/90 to-white/80 dark:from-slate-800/90 dark:to-slate-900/80 
+          text-slate-900 dark:text-slate-100 backdrop-blur-xl px-8 py-6 rounded-3xl 
+          border border-slate-200/50 dark:border-slate-700/50 shadow-2xl 
+          hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+    {{ $profils->sejarah ? Str::limit(strip_tags($profils->sejarah), 439) : 'Himpunan Mahasiswa Teknik Informatika Universitas Riau' }}
+</p>
+
                     <p class="text-base md:text-lg lg:text-xl font-light max-w-lg mx-auto lg:mx-0 
                         text-white/90 dark:text-slate-800/90 drop-shadow 
                         bg-white/10 dark:bg-slate-900/20 backdrop-blur px-6 py-3 
@@ -85,6 +90,22 @@
                             text-transparent drop-shadow-xl mb-1">{{ $stats['total_events'] ?? '150' }}+</div>
                         <div class="text-xs font-bold uppercase tracking-wider 
                             text-white/80 dark:text-slate-800/80 drop-shadow">Event</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl md:text-3xl lg:text-4xl font-black 
+                            bg-gradient-to-r from-emerald-400 to-cyan-400 
+                            dark:from-emerald-500 dark:to-cyan-500 bg-clip-text 
+                            text-transparent drop-shadow-xl mb-1">{{ $stats['total_acara'] ?? '100' }}+</div>
+                        <div class="text-xs font-bold uppercase tracking-wider 
+                            text-white/80 dark:text-slate-800/80 drop-shadow">Acara</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl md:text-3xl lg:text-4xl font-black 
+                            bg-gradient-to-r from-emerald-400 to-cyan-400 
+                            dark:from-emerald-500 dark:to-cyan-500 bg-clip-text 
+                            text-transparent drop-shadow-xl mb-1">{{ $stats['total_kegiatan'] ?? '75' }}+</div>
+                        <div class="text-xs font-bold uppercase tracking-wider 
+                            text-white/80 dark:text-slate-800/80 drop-shadow">Kegiatan</div>
                     </div>
                 </div>
             </div>
@@ -517,8 +538,6 @@
 </div>
 
 </section>
-
-
 
 {{-- Legalitas Section --}}
 <!-- <section id="legalitas" class="py-16 bg-gradient-to-r from-slate-50/80 to-indigo-50/80 dark:from-slate-900/50 dark:to-indigo-900/30">
@@ -1068,16 +1087,16 @@
         
         <div class="grid md:grid-cols-3 gap-8 pt-12 border-t border-white/20">
             <div class="text-center">
-                <div class="text-3xl lg:text-4xl font-black bg-gradient-to-r from-emerald-300 to-cyan-300 bg-clip-text text-transparent drop-shadow-xl mb-2">{{ $stats['totalUsers'] ?? '250' }}+</div>
-                <div class="text-sm font-bold uppercase tracking-wider text-indigo-200">Pengguna</div>
+                <div class="text-3xl lg:text-4xl font-black bg-gradient-to-r from-emerald-300 to-cyan-300 bg-clip-text text-transparent drop-shadow-xl mb-2">{{ $stats['total_users'] ?? '250' }}+</div>
+                <div class="text-sm font-bold uppercase tracking-wider text-indigo-200">Anggota Aktif</div>
             </div>
             <div class="text-center">
-                <div class="text-3xl lg:text-4xl font-black bg-gradient-to-r from-emerald-300 to-cyan-300 bg-clip-text text-transparent drop-shadow-xl mb-2">{{ $stats['totalEvents'] ?? '150' }}+</div>
-                <div class="text-sm font-bold uppercase tracking-wider text-indigo-200">Event</div>
+                <div class="text-3xl lg:text-4xl font-black bg-gradient-to-r from-emerald-300 to-cyan-300 bg-clip-text text-transparent drop-shadow-xl mb-2">{{ $stats['total_events'] ?? '150' }}+</div>
+                <div class="text-sm font-bold uppercase tracking-wider text-indigo-200">Event Sukses</div>
             </div>
             <div class="text-center">
-                <div class="text-3xl lg:text-4xl font-black bg-gradient-to-r from-emerald-300 to-cyan-300 bg-clip-text text-transparent drop-shadow-xl mb-2">{{ $stats['totalAcara'] ?? '100' }}+</div>
-                <div class="text-sm font-bold uppercase tracking-wider text-indigo-200">Acara & Kegiatan</div>
+                <div class="text-3xl lg:text-4xl font-black bg-gradient-to-r from-emerald-300 to-cyan-300 bg-clip-text text-transparent drop-shadow-xl mb-2">100%</div>
+                <div class="text-sm font-bold uppercase tracking-wider text-indigo-200">Kepuasan</div>
             </div>
         </div>
     </div>

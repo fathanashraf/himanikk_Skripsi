@@ -35,12 +35,14 @@
                             dark:from-slate-900 dark:to-emerald-400 bg-clip-text text-transparent 
                             drop-shadow-xl mb-3">{{ $profils->singkatan ?? 'HIMANIKA' }}</span>
                     </h1>
-                    <p class="text-lg md:text-xl lg:text-2xl font-medium max-w-2xl mx-auto lg:mx-0 
-                        text-white/90 dark:text-slate-800/90 drop-shadow 
-                        bg-white/10 dark:bg-slate-900/20 backdrop-blur px-6 py-3 
-                        rounded-xl border border-white/15 dark:border-slate-800/30">
-                        {{ $profils->sejarah ? Str::limit($profils->sejarah, 200) : 'Himpunan Mahasiswa Teknik Informatika Universitas Riau' }}
-                    </p>
+                    <p class="text-lg md:text-xl lg:text-2xl font-semibold max-w-2xl mx-auto lg:mx-0 
+          bg-gradient-to-r from-slate-50/90 to-white/80 dark:from-slate-800/90 dark:to-slate-900/80 
+          text-slate-900 dark:text-slate-100 backdrop-blur-xl px-8 py-6 rounded-3xl 
+          border border-slate-200/50 dark:border-slate-700/50 shadow-2xl 
+          hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+    {{ $profils->sejarah ? Str::limit(strip_tags($profils->sejarah), 439) : 'Himpunan Mahasiswa Teknik Informatika Universitas Riau' }}
+</p>
+
                     <p class="text-base md:text-lg lg:text-xl font-light max-w-lg mx-auto lg:mx-0 
                         text-white/90 dark:text-slate-800/90 drop-shadow 
                         bg-white/10 dark:bg-slate-900/20 backdrop-blur px-6 py-3 

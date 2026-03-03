@@ -64,7 +64,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::put('/', [ProfileController::class, 'update'])->name('update');
-    });
+        // password edit
+       Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.avatar.upload');
+        });
     
     // Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
@@ -232,13 +234,4 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
         Route::put('/', [TentangController::class, 'update'])->name('update');
         Route::delete('/', [TentangController::class, 'destroy'])->name('destroy');
     });
-})
-;
-
-
-Route::post('/deploy', function() {
-    if ($_SERVER['HTTP_X_GITHUB_EVENT'] !== 'push') abort(403);
-    
-    shell_exec('cd /app && git pull origin main && composer install --no-dev --optimize-autoloader && npm ci && npm run build && php artisan config:cache && php artisan route:cache');
-    return 'Deployed!';
 });

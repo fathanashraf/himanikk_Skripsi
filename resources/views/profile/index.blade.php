@@ -1,4 +1,4 @@
-@extends (
+@extends(
     (auth()->user()?->role === 'admin') 
         ? 'admin.layouts.app'
         : 'layouts.app'
@@ -19,10 +19,10 @@
                     
                     @php
                         $avatarPath = auth()->user()->avatar && auth()->user()->avatar !== 'default-avatar.png' 
-                                    ? Storage::disk('public')->exists(auth()->user()->avatar) 
-                                        ? Storage::url(auth()->user()->avatar) 
-                                        : null 
-                                    : null;
+                            ? Storage::disk('public')->exists(auth()->user()->avatar) 
+                                ? Storage::url(auth()->user()->avatar) 
+                                : null 
+                            : null;
                     @endphp
 
                     @if($avatarPath)
@@ -293,7 +293,7 @@ document.addEventListener('alpine:init', () => {
             formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
             formData.append('avatar', file);
 
-            // ✅ FIXED: Use actual route
+            // ✅ FIXED: Route yang benar untuk upload avatar
             fetch('#', {
                 method: 'POST',
                 body: formData
@@ -304,6 +304,7 @@ document.addEventListener('alpine:init', () => {
                     // Update avatar preview with cache busting
                     if (this.$refs.profileImg) {
                         this.$refs.profileImg.src = data.avatar_url + '?t=' + new Date().getTime();
+                        this.$refs.profileImg.style.display = 'block';
                     }
                     this.$dispatch('notify', { type: 'success', message: 'Avatar berhasil diupload!' });
                 } else {

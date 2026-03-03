@@ -106,7 +106,7 @@ class Pendaftaran extends Model
     /**
      * Relasi ke User (nullable)
      */
-    public function user(): BelongsTo
+    public function users(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

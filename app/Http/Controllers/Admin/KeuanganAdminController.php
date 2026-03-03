@@ -7,6 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Keuangan;
 use Illuminate\Http\Request;
 
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\KeuanganExport;
+
 class KeuanganAdminController extends Controller
 {
     public function index(Request $request)
@@ -130,6 +133,10 @@ public function destroy(Keuangan $keuangan)
     return response()->json([
         'message' => 'Transaksi berhasil dihapus!'
     ]);
+}
+
+public function export() {
+    return Excel::download(new KeuanganExport, 'keuangan.xlsx' . now()->format('Y-m-d') . '.xlsx');
 }
 
 }

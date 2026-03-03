@@ -25,7 +25,7 @@
                     <div class="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-slate-800 shadow-lg rounded-lg border border-slate-200 dark:border-slate-700 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
                         <a href="#profil" class="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"><i class="fas fa-users mr-3 text-blue-500"></i>HIMANIKKA</a>
                         <a href="#struktur" class="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"><i class="fas fa-sitemap mr-3 text-blue-500"></i>Struktur</a>
-                        <a href="/legalitas" class="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"><i class="fas fa-file mr-3 text-blue-500"></i>Legalitas</a>
+                        
                     </div>
                 </div>
 
@@ -121,9 +121,7 @@
                 <a href="#struktur" class="flex items-center py-2 px-6 ml-4 text-sm rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors">
                     <i class="fas fa-sitemap mr-3 text-blue-500"></i>Struktur
                 </a>
-                <a href="/legalitas" class="flex items-center py-2 px-6 ml-4 text-sm rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 transition-colors">
-                    <i class="fas fa-file mr-3 text-blue-500"></i>Legalitas
-                </a>
+                
             </div>
 
             {{-- Informasi --}}

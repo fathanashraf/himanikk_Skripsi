@@ -23,7 +23,7 @@ class PendaftaranAdminController extends Controller
     $status = $request->get('status');
     $jenisPendaftaran = $request->get('jenis_pendaftaran');
 
-    $query = Pendaftaran::with(['user', 'kegiatan', 'event', 'acara'])
+    $query = Pendaftaran::with(['users', 'kegiatan', 'event', 'acara'])
         ->latest('created_at');
 
     // Filter pencarian
