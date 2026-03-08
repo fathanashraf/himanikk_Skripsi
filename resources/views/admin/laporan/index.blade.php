@@ -201,7 +201,7 @@
                             @if($laporan->file)
                             <div class="flex items-center gap-2">
                                 <!-- View File -->
-                                <a href="{{ Storage::url($laporan->file) }}" target="_blank" 
+                                <a href="{{ asset('storage/' . ($laporan->file ?? '')) }}" target="_blank" 
                                     class="inline-flex items-center p-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-xs font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
                                     <!-- Heroicon: Eye -->
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

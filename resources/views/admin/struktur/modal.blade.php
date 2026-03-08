@@ -75,9 +75,13 @@
                                     focus:ring-2 focus:ring-amber-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
                                 <option value="">-- Tidak ada departemen --</option>
                                 <option value="kwu">KWU</option>
-                                <option value="minatbakat">Minat Bakat</option>
-                                <option value="pemberdaya_wanita">Pemberdaya Wanita</option>
-                                <option value="humas">Humas</option>
+                            <option value="minatbakat">Minat Bakat</option>
+                            <option value="pemberdaya_wanita">Pemberdaya Wanita</option>
+                            <option value="humas">Humas</option>
+                            <option value="kaderisasi">Kaderisasi</option>
+                            <option value="kominfo">Kominfo</option>
+                            <option value="keagamaan">Keagamaan</option>
+                            <option value="sosial">Sosial</option>
                             </select>
                             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                                 <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -179,6 +183,10 @@
                             <option value="minatbakat">Minat Bakat</option>
                             <option value="pemberdaya_wanita">Pemberdaya Wanita</option>
                             <option value="humas">Humas</option>
+                            <option value="kaderisasi">Kaderisasi</option>
+                            <option value="kominfo">Kominfo</option>
+                            <option value="keagamaan">Keagamaan</option>
+                            <option value="sosial">Sosial</option>
                         </select>
                     </div>
                 </div>
@@ -352,48 +360,163 @@
         hideErrors('createErrors');
     };
 
-    window.closeEditModal = function() {
-        document.getElementById('editStrukturModal')?.classList.add('hidden');
-        hideErrors('editErrors');
-    };
+   window.closeEditModal = function() {
+    const modal = document.getElementById('editStrukturModal');
+    if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+    hideErrors('editErrors');
+};
 
-    window.openEditModal = function(id, strukturData) {
-        const modal = document.getElementById('editStrukturModal');
-        document.getElementById('editStrukturId').value = id;
-        document.getElementById('editUserId').value = strukturData.user_id || '';
-        document.getElementById('editJabatan').value = strukturData.jabatan || '';
-        document.getElementById('editPosisi').value = strukturData.posisi || '';
-        document.getElementById('editDepartemen').value = strukturData.departemen || '';
+// 🎯 FIXED: Comprehensive error checking + null safety
+window.openEditModal = function(id, strukturData = {}) {
+    console.log('🔍 openEditModal called:', { id, strukturData });
+    
+    // Validate inputs
+    if (!id) {
+        console.error('❌ ID required');
+        showNotification?.('ID struktur diperlukan', 'error');
+        return;
+    }
+    
+    const modal = document.getElementById('editStrukturModal');
+    const editStrukturId = document.getElementById('editStrukturId');
+    
+    if (!modal || !editStrukturId) {
+        console.error('❌ Modal or ID field missing');
+        showNotification?.('Modal tidak ditemukan', 'error');
+        return;
+    }
+    
+    // 🎯 SAFE FIELD POPULATION
+    try {
+        // ID field
+        editStrukturId.value = id;
         
-        // Show current avatar
-        const preview = document.getElementById('currentAvatarPreview');
-        if (strukturData.avatar) {
-            document.getElementById('avatarPreviewImg').src = `/storage/${strukturData.avatar}`;
-            preview?.classList.remove('hidden');
-        } else {
-            preview?.classList.add('hidden');
+        // Text inputs - null-safe
+        const fields = {
+            'editUserId': strukturData.user_id || '',
+            'editJabatan': strukturData.jabatan || '',
+            'editPosisi': strukturData.posisi || '',
+            'editDepartemen': strukturData.departemen || ''
+        };
+        
+        Object.entries(fields).forEach(([fieldId, value]) => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.value = value;
+                console.log(`✅ ${fieldId}:`, value);
+            } else {
+                console.warn(`⚠️ Field not found: ${fieldId}`);
+            }
+        });
+        
+        // 🎯 SELECT DROPDOWN FIX
+        if (strukturData.user_id) {
+            setTimeout(() => selectDropdownOption('editUserId', strukturData.user_id), 50);
         }
         
+        // Avatar preview
+        handleAvatarPreview(strukturData.avatar);
+        
+        // Reset errors & show modal
         hideErrors('editErrors');
-        modal?.classList.remove('hidden');
-    };
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        
+        console.log('🎉 Struktur modal opened!');
+        
+    } catch (error) {
+        console.error('❌ openEditModal error:', error);
+        showNotification?.('Gagal membuka modal', 'error');
+    }
+};
 
-    // ✅ NEW FUNCTION - Untuk table row edit button
-    window.openEditModalFromRow = function(button) {
-        const row = button.closest('tr');
-        const id = row.dataset.strukturId;
-        let strukturData;
-        
-        try {
-            strukturData = JSON.parse(row.dataset.strukturData || '{}');
-        } catch (e) {
-            console.error('Error parsing struktur data:', e);
-            showNotification('Data struktur tidak valid', 'error');
-            return;
+// 🎯 NEW: Robust row data extraction
+window.openEditModalFromRow = function(button) {
+    console.log('🔍 openEditModalFromRow clicked');
+    
+    if (!button || typeof button.closest !== 'function') {
+        console.error('❌ Invalid button');
+        return;
+    }
+    
+    const row = button.closest('tr');
+    if (!row) {
+        console.error('❌ Row not found');
+        return;
+    }
+    
+    const id = row.dataset.strukturId;
+    const rawData = row.dataset.strukturData || '{}';
+    
+    if (!id) {
+        console.error('❌ strukturId missing in row');
+        showNotification?.('Data ID tidak ditemukan', 'error');
+        return;
+    }
+    
+    let strukturData;
+    try {
+        strukturData = typeof rawData === 'string' ? JSON.parse(rawData) : rawData;
+        console.log('📊 Parsed data:', strukturData);
+    } catch (e) {
+        console.error('❌ JSON parse error:', e, rawData);
+        showNotification?.('Data struktur rusak', 'error');
+        return;
+    }
+    
+    openEditModal(id, strukturData);
+};
+
+// 🎯 HELPER FUNCTIONS
+function selectDropdownOption(selectId, value) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    
+    Array.from(select.options).forEach(option => {
+        if (option.value == value) {  // Loose comparison for ID
+            option.selected = true;
+            select.value = value;
+            console.log(`✅ Selected ${selectId}:`, option.textContent);
         }
-        
-        openEditModal(id, strukturData);
-    };
+    });
+    
+    // Trigger change events
+    select.dispatchEvent(new Event('change', { bubbles: true }));
+    select.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function handleAvatarPreview(avatarPath) {
+    const preview = document.getElementById('currentAvatarPreview');
+    const img = document.getElementById('avatarPreviewImg');
+    
+    if (avatarPath && preview && img) {
+        img.src = `/storage/${avatarPath}`;
+        preview.classList.remove('hidden');
+        console.log('✅ Avatar preview:', avatarPath);
+    } else if (preview) {
+        preview.classList.add('hidden');
+    }
+}
+
+function hideErrors(prefix = '') {
+    document.querySelectorAll(`[id*="${prefix}"]`).forEach(el => {
+        if (el.classList.contains('error')) el.classList.remove('error');
+        if (el.tagName === 'DIV' || el.tagName === 'SPAN') el.innerHTML = '';
+    });
+}
+
+function showNotification(message, type = 'success') {
+    // Fallback jika toast tidak ada
+    if (typeof showToast === 'function') {
+        showToast(message, type);
+    } else {
+        alert(message);
+    }
+}
+
 
     window.openDeleteModal = function(id, name) {
         document.getElementById('deleteStrukturId').value = id;
@@ -452,54 +575,67 @@
 
         // Edit form
         const editForm = document.getElementById('editStrukturForm');
-        if (editForm) {
-            editForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const id = document.getElementById('editStrukturId').value;
-                const submitBtn = document.getElementById('editSubmitBtn');
-                const formData = new FormData(e.target);
-                
-                if (!id) {
-                    showNotification('ID tidak valid', 'error');
-                    return;
-                }
-
-                formData.append('_method', 'PUT');
-
-                setLoading(submitBtn, true);
-                hideErrors('editErrors');
-
-                try {
-                    const response = await fetch(`/admin/struktur/${struktur}`, {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
-                            'Accept': 'application/json'
-                        }
-                    });
-
-                    const result = await response.json();
-
-                    if (response.ok) {
-                        showNotification(result.message || 'Berhasil diupdate!', 'success');
-                        closeEditModal();
-                        refreshData();
-                    } else {
-                        if (result.errors) {
-                            showErrors('editErrors', result.errors);
-                        } else {
-                            throw new Error(result.message || 'Terjadi kesalahan');
-                        }
-                    }
-                } catch (error) {
-                    console.error('Edit error:', error);
-                    showNotification(error.message || 'Terjadi kesalahan!', 'error');
-                } finally {
-                    setLoading(submitBtn, false);
-                }
-            });
+if (editForm) {
+    editForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // 🎯 FIX 1: Get ID correctly
+        const id = document.getElementById('editStrukturId')?.value;
+        const submitBtn = document.getElementById('editSubmitBtn') || e.target.querySelector('button[type="submit"]');
+        const formData = new FormData(e.target);
+        
+        console.log('📤 Submitting struktur ID:', id);
+        
+        if (!id) {
+            showNotification('ID struktur tidak valid', 'error');
+            return;
         }
+        
+        // 🎯 FIX 2: Append _method BEFORE other processing
+        formData.append('_method', 'PUT');
+        
+        // Loading state
+        setLoading(submitBtn, true);
+        hideErrors('editErrors');
+        
+        try {
+            // 🎯 FIX 3: Correct URL + fetch options
+            const response = await fetch(`/admin/struktur/${id}`, {  // ✅ Use ID, not 'struktur'
+                method: 'POST',
+                body: formData,
+                // 🎯 DON'T set Content-Type - browser handles multipart/form-data automatically
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'),
+                    'Accept': 'application/json'
+                },
+                credentials: 'same-origin'  // Include cookies
+            });
+            
+            const result = await response.json();
+            console.log('📥 Response:', result);
+            
+            if (response.ok) {
+                showNotification(result.message || '✅ Berhasil diupdate!', 'success');
+                closeEditModal();
+                refreshData?.();  // Optional
+            } else {
+                // 🎯 FIX 4: Better error handling
+                if (result.errors) {
+                    showErrors('editErrors', result.errors);
+                } else if (result.message) {
+                    showNotification(result.message, 'error');
+                } else {
+                    throw new Error('Terjadi kesalahan server');
+                }
+            }
+        } catch (error) {
+            console.error('❌ Edit error:', error);
+            showNotification(error.message || 'Gagal mengupdate struktur', 'error');
+        } finally {
+            setLoading(submitBtn, false);
+        }
+    });
+}
 
         // Delete handler
         const deleteBtn = document.getElementById('confirmDeleteBtn');

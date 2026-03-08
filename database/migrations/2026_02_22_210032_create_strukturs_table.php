@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('jabatan',['kahim', 'wakahim', 'sekretaris', 'bendahara',])->nullable();
             $table->string('avatar')->nullable();
             $table->enum('posisi',['koordinator', 'anggota'])->nullable();
-            $table->enum('departemen',['kwu','minatbakat','pemberdaya_wanita', 'humas'])->nullable();
+            $table->enum('departemen',['kwu','minatbakat','pemberdaya_wanita', 'humas', 'kaderisasi', 'kominfo', 'keagamaan', 'sosial'])->nullable();
             $table->timestamps();
         });
     }

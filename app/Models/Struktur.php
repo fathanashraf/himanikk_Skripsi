@@ -101,6 +101,10 @@ class Struktur extends Model
             'minatbakat' => 'Minat Bakat',
             'pemberdaya_wanita' => 'Pemberdayaan Wanita',
             'humas' => 'Humas',
+            'kaderisasi' => 'Kaderisasi',
+            'kominfo' => 'Kominfo',
+            'sosial' => 'Sosial',
+            'keagamaan' => 'Keagamaan'
         ];
 
         return Attribute::make(
@@ -179,6 +183,10 @@ class Struktur extends Model
             'minatbakat' => 'from-green-500 to-green-600',
             'pemberdaya_wanita' => 'from-pink-500 to-pink-600',
             'humas' => 'from-orange-500 to-orange-600',
+            'kaderisasi' => 'from-rose-500 to-rose-600',
+            'kominfo' => 'from-sky-500 to-sky-600',
+            'keagamaan' => 'from-teal-500 to-teal-600',
+            'sosial' => 'from-lime-500 to-lime-600',
             default => 'from-slate-500 to-slate-600'
         };
     }

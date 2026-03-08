@@ -67,5 +67,29 @@ class User extends Authenticatable
         return $this->hasOne(Struktur::class, 'user_id');
     }
 
+    public function kegiatan()
+    {
+        return $this->hasMany(Kegiatan::class, 'user_id');
+    }
+
+    public function masukkans()
+    {
+        return $this->hasMany(Masukkan::class, 'user_id');
+    }
+
+    public function pendaftaran()
+    {
+        return $this->hasMany(Pendaftaran::class, 'user_id');
+    }
+
+    public function acara()
+    {
+        return $this->hasMany(Acara::class, 'user_id');
+    }
+
+    public function event()
+    {
+        return $this->hasMany(Event::class, 'user_id');
+    }
 
 }

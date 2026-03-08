@@ -164,7 +164,7 @@ class DashboardAdminController extends Controller
         $recentActivities = $recentActivities->concat($recentPembayaran);
 
         // 8. PENDAFTARAN
-        $recentPendaftaran = Pendaftaran::latest('created_at')->with('users')->limit(2)->get()->map(function ($p) {
+        $recentPendaftaran = Pendaftaran::latest('created_at')->with('user')->limit(2)->get()->map(function ($p) {
             return [
                 'id' => "pendaftaran_{$p->id}",
                 'icon' => 'mdi:clipboard-list',

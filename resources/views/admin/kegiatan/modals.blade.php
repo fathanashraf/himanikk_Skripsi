@@ -31,21 +31,85 @@
                         placeholder="Masukkan deskripsi kegiatan"></textarea>
                 </div>
 
-                {{-- Status --}}
-                <div class="relative">
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Status *</label>
-                    <select name="status" required 
-                        class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
-                        <option value="">-- Pilih Status --</option>
-                        <option value="0">Draft</option>
-                        <option value="1">Published</option>
-                        <option value="2">Archived</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none top-14">
-                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                {{-- Grid untuk fields --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Status --}}
+                    <div class="relative">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Status</label>
+                        <select name="status" required 
+                            class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="segera">Segera</option>
+                            <option value="belum" selected>Belum</option>
+                            <option value="selesai">Selesai</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none top-14">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
                     </div>
+
+                    {{-- Tanggal --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-calendar-alt text-emerald-500"></i>
+                            Tanggal Kegiatan *
+                        </label>
+                        <input 
+                            type="date" 
+                            name="tanggal" 
+                            min="{{ now()->format('Y-m-d') }}" 
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Waktu --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-clock text-orange-500"></i>
+                            Jam Mulai *
+                        </label>
+                        <input 
+                            type="time" 
+                            name="waktu" 
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+
+                    {{-- Tempat --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-blue-500"></i>
+                            Tempat Kegiatan *
+                        </label>
+                        <input 
+                            type="text" 
+                            name="tempat" 
+                            placeholder="Contoh: Aula Serbaguna UIN Suska Riau"
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+                </div>
+
+                {{-- Penanggung Jawab --}}
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                        <i class="fas fa-user-tie text-purple-500"></i>
+                        Penanggung Jawab *
+                    </label>
+                    <select name="user_id" required 
+                        class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
+                        <option value="">Pilih Penanggung Jawab</option>
+                        @foreach($users ?? [] as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->email }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 {{-- Gambar --}}
@@ -122,21 +186,88 @@
                         placeholder="Masukkan deskripsi kegiatan"></textarea>
                 </div>
 
-                {{-- Status --}}
-                <div class="relative">
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Status *</label>
-                    <select name="status" id="editStatus" required 
-                        class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl 
-                               focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
-                        <option value="0">Draft</option>
-                        <option value="1">Published</option>
-                        <option value="2">Archived</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none top-14">
-                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                {{-- Grid untuk fields --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Status --}}
+                    <div class="relative">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Status *</label>
+                        <select name="status" id="editStatus" required 
+                            class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl 
+                                   focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
+                            <option value="segera">Segera</option>
+                            <option value="belum">Belum</option>
+                            <option value="selesai">Selesai</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none top-14">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
                     </div>
+
+                    {{-- Tanggal --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-calendar-alt text-emerald-500"></i>
+                            Tanggal Kegiatan *
+                        </label>
+                        <input 
+                            type="date" 
+                            name="tanggal" 
+                            id="editTanggal" 
+                            min="{{ now()->format('Y-m-d') }}" 
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Waktu --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-clock text-orange-500"></i>
+                            Jam Mulai *
+                        </label>
+                        <input 
+                            type="time" 
+                            name="waktu" 
+                            id="editWaktu" 
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+
+                    {{-- Tempat --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-blue-500"></i>
+                            Tempat Kegiatan *
+                        </label>
+                        <input 
+                            type="text" 
+                            name="tempat" 
+                            id="editTempat"
+                            placeholder="Contoh: Aula Serbaguna UIN Suska Riau"
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+                </div>
+
+                {{-- Penanggung Jawab --}}
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                        <i class="fas fa-user-tie text-purple-500"></i>
+                        Penanggung Jawab *
+                    </label>
+                    <select name="user_id" id="editUserId" required 
+                        class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
+                        <option value="">Pilih Penanggung Jawab</option>
+                        @foreach($users ?? [] as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->email }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 {{-- Gambar --}}
@@ -149,12 +280,10 @@
                                file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100">
                     <div id="currentImageInfo" class="mt-3 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl hidden border">
                         <p class="text-xs text-slate-500 mb-2">Gambar saat ini:</p>
-                        @if(isset($kegiatan->image))
                         <div class="flex items-center gap-3">
-                            <img src="{{ Storage::url($kegiatan->image) }}" alt="Current image" class="w-12 h-12 object-cover rounded-lg">
+                            <img id="currentImagePreview" src="" alt="Current image" class="w-12 h-12 object-cover rounded-lg hidden">
                             <span id="currentImageName" class="text-sm font-medium text-slate-700 dark:text-slate-300"></span>
                         </div>
-                        @endif
                     </div>
                     <p class="mt-2 text-xs text-slate-500 dark:text-slate-400">Maksimal 5MB. Format JPG, PNG, WebP. Biarkan kosong untuk mempertahankan gambar lama.</p>
                 </div>
@@ -186,7 +315,7 @@
     </div>
 </div>
 
-{{-- DELETE MODAL --}}
+{{-- DELETE MODAL (tidak berubah) --}}
 <div id="deleteKegiatanModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-md w-full mx-4">
         <div class="p-8 text-center">
@@ -341,18 +470,28 @@
         hideErrors('editErrors');
     };
 
+    // ✅ UPDATED: Sesuai schema database baru
     window.openEditModal = function(id, kegiatanData) {
         const modal = document.getElementById('editKegiatanModal');
         document.getElementById('editKegiatanId').value = id;
         document.getElementById('editName').value = kegiatanData.name || '';
         document.getElementById('editDescription').value = kegiatanData.description || '';
-        document.getElementById('editStatus').value = kegiatanData.status || '0';
+        document.getElementById('editStatus').value = kegiatanData.status || 'belum'; // Default sesuai DB
+        document.getElementById('editTanggal').value = kegiatanData.tanggal || '';
+        document.getElementById('editWaktu').value = kegiatanData.waktu || '';
+        document.getElementById('editTempat').value = kegiatanData.tempat || '';
+        document.getElementById('editUserId').value = kegiatanData.user_id || '';
         document.getElementById('editLink').value = kegiatanData.link || '';
         
         // Show current image info
         const imageInfo = document.getElementById('currentImageInfo');
+        const imagePreview = document.getElementById('currentImagePreview');
+        const imageName = document.getElementById('currentImageName');
+        
         if (kegiatanData.image) {
-            document.getElementById('currentImageName').textContent = kegiatanData.image;
+            imagePreview.src = kegiatanData.image;
+            imagePreview.classList.remove('hidden');
+            imageName.textContent = kegiatanData.image.split('/').pop();
             imageInfo?.classList.remove('hidden');
         } else {
             imageInfo?.classList.add('hidden');

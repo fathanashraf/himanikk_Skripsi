@@ -15,7 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->integer('status');
+            $table->enum('status', ['segera', 'belum', 'selesai'])->default('belum');
+            $table->date('tanggal');
+            $table->time('waktu');
+            $table->string('tempat');
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('image')->nullable();
             $table->string('link')->nullable();
             $table->timestamps();

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Event extends Model
 {
@@ -12,44 +13,86 @@ class Event extends Model
 
     protected $fillable = [
         'name',
-        'description', 
+        'description',
         'status',
+        'tanggal',
+        'waktu',
+        'tempat',
+        'user_id',
         'image',
-        'link'
+        'link',
     ];
 
     protected $casts = [
-        'status' => 'integer'
+        'tanggal' => 'date',
+        'waktu' => 'datetime:H:i',
     ];
 
-    public function getImageUrlAttribute()
-    {
-        return $this->image ? Storage::url($this->image) : null;
-    }
-
-    public function getStatusLabelAttribute()
-    {
-        return match($this->status) {
-            0 => 'Draft',
-            1 => 'Dipublikasikan',
-            2 => 'Arsip',
-            default => 'Unknown'
-        };
-    }
-
-    public const DRAFT = 0;
-    public const PUBLISHED = 1;
-    public const ARCHIVED = 2;
-
-    public function getStatusBadgeAttribute()
-    {
-        $badges = [
-            self::DRAFT => ['bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400', 'Draft'],
-            self::PUBLISHED => ['bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400', 'Published'],
-            self::ARCHIVED => ['bg-slate-100 text-slate-800 dark:bg-slate-700/50 dark:text-slate-400', 'Archived'],
-        ];
-
-        return $badges[$this->status] ?? $badges[self::DRAFT];
-    }
     
+    // Status constants
+    const STATUS_segera = 0;
+    const STATUS_belum = 1;
+    const STATUS_selesai = 2;
+
+    // Status labels
+    public static function getStatusLabels(): array
+    {
+        return [
+            self::STATUS_segera => 'segera',
+            self::STATUS_belum => 'belum',
+            self::STATUS_selesai => 'selesai',
+        ];
+    }
+
+    // Status badge colors
+    public static function getStatusColors(): array
+    {
+        return [
+            self::STATUS_segera => 'bg-yellow-100 text-yellow-800',
+            self::STATUS_belum => 'bg-emerald-100 text-emerald-800',
+            self::STATUS_selesai => 'bg-gray-100 text-gray-800',
+        ];
+    }
+
+    // Scope for belum activities
+    public function scopebelum($query)
+    {
+        return $query->where('status', self::STATUS_belum);
+    }
+
+    // Accessor for status label
+    protected function statusLabel(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => self::getStatusLabels()[$this->status] ?? 'Unknown'
+        );
+    }
+
+    // Image URL
+    protected function imageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->image ? asset('storage/' . $this->image) : null
+        );
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
+
+    public function masukkans()
+    {
+        return $this->hasMany(Masukkan::class, 'event_id');
+    }
+
+    public function pendaftarans()
+    {
+        return $this->hasMany(Pendaftaran::class, 'event_id');
+    }
+
+    public function getWaPenanggungJawabAttribute()
+    {
+        return $this->user?->phone;
+    }
 }

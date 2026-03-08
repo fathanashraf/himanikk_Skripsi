@@ -96,11 +96,11 @@ class TentangController extends Controller
     /**
      * Show form edit profil organisasi
      */
-    public function edit()
-    {
-        $profil = Profil::firstOrFail();
-        return view('admin.tentang.edit', compact('profil'));
-    }
+    public function edit($id) {
+    $profil = Profil::findOrFail($id); // Sesuaikan model
+    return response()->json($profil);
+}
+
 
     /**
      * Update profil organisasi

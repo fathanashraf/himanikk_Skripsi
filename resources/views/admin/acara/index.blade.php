@@ -1,178 +1,241 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Kelola Acara HIMANIKKA')
+@section('title', 'Kelola acara HIMANIKKA')
 
 @section('content')
-<div class="p-6 space-y-6">
+<div class="space-y-8">
     {{-- Header --}}
-    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-            <h1 class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">Kelola Acara</h1>
-            <p class="text-slate-600 dark:text-slate-400 mt-1">Atur acara-acara HIMANIKKA dengan mudah</p>
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-8">
+        {{-- Main Header --}}
+        <div class="flex items-center gap-4">
+            <div class="flex-shrink-0 p-3.5 bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 rounded-2xl shadow-2xl border border-white/20 hover:border-white/40 active:border-white/60 backdrop-blur-sm hover:shadow-3xl hover:scale-[1.02] transition-all duration-300 group">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-white drop-shadow-2xl group-hover:scale-110 transition-transform duration-200">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9.97 9.97 0 00-.933 6.743l-.505 2.124c-.179.795-.793 1.383-1.527 1.383H16.5" />
+                </svg>
+            </div>
+            <div class="min-w-0 flex-1">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-black leading-tight tracking-tight mb-1.5 bg-gradient-to-r from-slate-900 via-gray-900 to-slate-900 bg-clip-text text-transparent dark:from-slate-100 via-white to-slate-200 drop-shadow-sm">
+                    Kelola acara
+                </h1>
+                <p class="text-lg md:text-xl text-gray-600 dark:text-gray-300 font-medium tracking-wide leading-relaxed max-w-2xl">
+                    Kelola acara HIMANIKKA dengan nama, deskripsi, status, dan dokumen pendukung
+                </p>
+            </div>
         </div>
-        <button onclick="openCreateModal()" 
-            class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-emerald-600 hover:to-emerald-700 focus:ring-4 focus:ring-emerald-200 transition-all duration-300 flex items-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Tambah Acara
-        </button>
+
+        {{-- Filter & Actions --}}
+        <div class="flex flex-col sm:flex-row gap-3">
+            <!-- Filter Form -->
+            <form method="GET" action="{{ route('admin.acara.index') }}" class="flex flex-col sm:flex-row items-end gap-3 flex-1">
+                <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                    <!-- Search -->
+                    <div class="relative flex-1 min-w-0">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.601 10.601z"/>
+                        </svg>
+                        <input 
+                            type="text" 
+                            name="search" 
+                            value="{{ request('search', '') }}"
+                            placeholder="Cari nama acara..." 
+                            class="w-full pl-11 pr-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm"
+                        >
+                    </div>
+                    <!-- Status Filter -->
+                    <select name="status" class="w-full sm:w-auto px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 appearance-none">
+                        <option value="">Semua Status</option>
+                        <option value="segera" {{ request('status') == 'segera' ? 'selected' : '' }}>Segera</option>
+                        <option value="belum" {{ request('status') == 'belum' ? 'selected' : '' }}>Sedang</option>
+                        <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                    </select>
+                </div>
+                <!-- Filter Button -->
+                <button type="submit" 
+                    class="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 whitespace-nowrap flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.601 10.601z"/>
+                    </svg>
+                    Filter
+                </button>
+                @if(request()->hasAny(['search', 'status']))
+                    <a href="{{ route('admin.acara.index') }}" class="px-6 py-3 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white font-medium transition-colors rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800/50 flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 15L11.25 15m0 0L13.5 15m-2.25 0l-.75 3.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Clear
+                    </a>
+                @endif
+            </form>
+            <!-- Add Button -->
+            <button @click="openCreateModal()" 
+                class="px-8 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 flex items-center whitespace-nowrap">
+                <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+                Tambah acara
+            </button>
+        </div>
     </div>
 
     {{-- Stats Cards --}}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl transition-all duration-300">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">Total Acara</p>
-                    <p class="text-3xl font-bold text-slate-900 dark:text-white mt-1">{{ $stats['total_acaras'] }}</p>
-                </div>
-                <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/20 rounded-xl flex items-center justify-center">
-                    <svg class="w-7 h-7 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {{-- Total acara --}}
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md transition-all duration-200 group">
+            <div class="flex items-center">
+                <div class="p-3 bg-gradient-to-r from-slate-500 to-slate-600 rounded-xl shadow-lg group-hover:scale-105 transition-transform duration-200">
+                    <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 6.5A1.5 1.5 0 017.5 8h9A1.5 1.5 0 0118 6.5v2A1.5 1.5 0 0116.5 10h-9A1.5 1.5 0 016 8.5v-2zM6 13.5A1.5 1.5 0 017.5 12h9A1.5 1.5 0 0118 13.5v2A1.5 1.5 0 0116.5 17h-9A1.5 1.5 0 016 15.5v-2z"/>
                     </svg>
+                </div>
+                <div class="ml-5">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total acara</p>
+                    <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ number_format($stats['total_acara'] ?? 0) }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl transition-all duration-300">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">Dipublikasikan</p>
-                    <p class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{{ $stats['published_acaras'] }}</p>
-                </div>
-                <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/20 rounded-xl flex items-center justify-center">
-                    <svg class="w-7 h-7 text-emerald-600 dark:text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        {{-- Published --}}
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md transition-all duration-200 group">
+            <div class="flex items-center">
+                <div class="p-3 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl shadow-lg text-white group-hover:scale-105 transition-transform duration-200">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
+                </div>
+                <div class="ml-5">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Selesai</p>
+                    <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ number_format($stats['selesai_acara'] ?? 0) }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl transition-all duration-300">
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-sm font-medium text-slate-600 dark:text-slate-400 uppercase tracking-wide">Draft</p>
-                    <p class="text-3xl font-bold text-amber-600 dark:text-amber-400 mt-1">{{ $stats['draft_acaras'] }}</p>
-                </div>
-                <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/20 rounded-xl flex items-center justify-center">
-                    <svg class="w-7 h-7 text-amber-600 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        {{-- Draft --}}
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md transition-all duration-200 group">
+            <div class="flex items-center">
+                <div class="p-3 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl shadow-lg text-white group-hover:scale-105 transition-transform duration-200">
+                    <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
+                </div>
+                <div class="ml-5">
+                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Segera</p>
+                    <p class="text-3xl font-bold text-gray-900 dark:text-white">{{ number_format($stats['segera_acara'] ?? 0) }}</p>
                 </div>
             </div>
         </div>
     </div>
 
-    {{-- Table Container --}}
-    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-200/50 dark:border-slate-700/50 overflow-hidden">
-        <div class="p-6 border-b border-slate-200/50 dark:border-slate-700/50">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="p-2 bg-slate-100 dark:bg-slate-700 rounded-xl">
-                        <svg class="w-6 h-6 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Daftar Acara</h3>
-                        <p class="text-sm text-slate-500 dark:text-slate-400">Kelola semua acara HIMANIKKA</p>
-                    </div>
-                </div>
-                
-                {{-- Search & Filter --}}
-                <div class="flex flex-col sm:flex-row gap-3 flex-1">
-                    <div class="relative flex-1 max-w-md">
-                        <input type="text" id="searchInput" placeholder="Cari acara..." 
-                            class="w-full pl-12 pr-4 py-3 bg-slate-100/50 dark:bg-slate-700/50 border border-slate-200/50 dark:border-slate-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 text-sm">
-                        <svg class="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                    </div>
-                    <select id="statusFilter" class="px-4 py-3 bg-slate-100/50 dark:bg-slate-700/50 border border-slate-200/50 dark:border-slate-600/50 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all duration-200 text-sm">
-                        <option value="">Semua Status</option>
-                        <option value="0">Draft</option>
-                        <option value="1">Published</option>
-                        <option value="2">Archived</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        {{-- Table --}}
+    {{-- Table --}}
+    <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full">
-                <thead class="bg-slate-50/50 dark:bg-slate-700/50">
+            <table class="w-full divide-y divide-gray-200 dark:divide-slate-700">
+                <thead class="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800/60 dark:to-slate-900/60">
                     <tr>
-                        <th class="px-6 py-5 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Acara</th>
-                        <th class="px-6 py-5 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Status</th>
-                        <th class="px-6 py-5 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider w-32">Gambar</th>
-                        <th class="px-6 py-5 text-left text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Link</th>
-                        <th class="px-6 py-5 text-right text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Aksi</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-64">Nama acara</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-72">Deskripsi</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Status</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-40">Tanggal</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Waktu</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-48">Tempat</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-48">Penyelenggara</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-40">Gambar</th>
+                        <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-slate-200/50 dark:divide-slate-700/50">
+                <tbody class="divide-y divide-gray-200 dark:divide-slate-700">
                     @forelse($acaras as $acara)
-                    <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-700/50 transition-colors duration-200 group" 
-                        data-acara-id="{{ $acara->id }}"
-                        data-acara-data="{{ json_encode($acara->only(['name', 'description', 'status', 'image', 'link'])) }}">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-all duration-200 group" data-acara-id="{{ $acara->id }}" data-acara-data="{{ json_encode($acara->toArray()) }}">
                         <td class="px-6 py-5">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <div class="font-semibold text-slate-900 dark:text-white text-sm leading-tight">{{ Str::limit($acara->name, 40) }}</div>
-                                    <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-2">{{ Str::limit($acara->description, 80) }}</div>
+                            <div class="flex items-center space-x-3">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-2xl shadow-lg flex items-center justify-center overflow-hidden group relative">
+    @if($acara->image)
+        <a href="{{ asset('storage/' . $acara->image) }}" 
+           target="_blank"
+           class="w-full h-full bg-cover bg-center bg-no-repeat rounded-2xl transition-all duration-200 group-hover:scale-110 hover:shadow-2xl"
+           style="background-image: url('{{ asset('storage/' . $acara->image) }}')"
+           title="Lihat gambar lengkap">
+            <!-- Overlay untuk efek hover -->
+            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+            <svg class="w-5 h-5 text-white/90 opacity-0 group-hover:opacity-100 relative z-10 transition-all duration-200" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.638 19.5 12 19.5s-8.573-3.007-9.963-7.178z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+        </a>
+    @else
+        <!-- Fallback icon jika tidak ada gambar -->
+        <div class="w-full h-full bg-gradient-to-br from-gray-400 to-gray-500 flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5a1 1 0 01-1-1v-1.5a3.375 3.375 0 00-3.375-3.375H8"/>
+            </svg>
+        </div>
+    @endif
+</div>
+
+                                <div class="min-w-0 flex-1">
+                                    <div class="font-semibold text-gray-900 dark:text-white truncate max-w-md group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{{ $acara->name }}</div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">{{ $acara->created_at?->format('d M Y • H:i') ?? 'N/A' }}</div>
                                 </div>
                             </div>
                         </td>
                         <td class="px-6 py-5">
-                            @php $statusClass = $acara->status == 1 ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400' : ($acara->status == 0 ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400' : 'bg-slate-100 text-slate-800 dark:bg-slate-700/50 dark:text-slate-400'); @endphp
-                            <span class="inline-flex px-3 py-1 rounded-full text-xs font-semibold {{ $statusClass }}">
-                                {{ $acara->status == 1 ? 'Published' : ($acara->status == 0 ? 'Draft' : 'Archived') }}
+                            <p class="text-sm text-gray-900 dark:text-gray-100 max-w-xs truncate line-clamp-2" title="{{ $acara->description }}">{{ $acara->description }}</p>
+                        </td>
+                        <td class="px-6 py-5">
+                            @php
+                                $statusConfig = [
+                                    'segera' => ['label' => 'Segera', 'color' => 'red'],
+                                    'belum' => ['label' => 'Sedang', 'color' => 'yellow'],
+                                    'selesai' => ['label' => 'Selesai', 'color' => 'green'],
+                                ];
+                                $status = $statusConfig[$acara->status] ?? ['label' => 'Unknown', 'color' => 'gray'];
+                            @endphp
+                            <span class="inline-flex px-3 py-1 bg-{{ $status['color'] }}-100 dark:bg-{{ $status['color'] }}-900/30 text-{{ $status['color'] }}-800 dark:text-{{ $status['color'] }}-200 border border-{{ $status['color'] }}-200 dark:border-{{ $status['color'] }}-800 rounded-full text-xs font-semibold shadow-sm">
+                                {{ $status['label'] }}
                             </span>
                         </td>
                         <td class="px-6 py-5">
-                            @if($acara->image)
-                                <img src="{{ Storage::url($acara->image) }}" alt="{{ $acara->name }}" class="w-12 h-12 object-cover rounded-xl shadow-md">
-                            @else
-                                <div class="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center">
-                                    <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                    </svg>
-                                </div>
-                            @endif
+                            <p class="text-sm text-gray-900 dark:text-gray-100 font-mono">{{ $acara->tanggal?->format('d M Y') ?? 'N/A' }}</p>
                         </td>
                         <td class="px-6 py-5">
-                            @if($acara->link)
-                                <a href="{{ $acara->link }}" target="_blank" rel="noopener noreferrer" 
-                                   class="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-medium text-sm truncate max-w-xs inline-flex items-center gap-1 group">
-                                    Link
-                                    <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                                    </svg>
-                                </a>
-                            @else
-                                <span class="text-slate-400 text-sm font-medium">Tidak ada</span>
-                            @endif
+                            <p class="text-sm text-gray-900 dark:text-gray-100 font-mono">{{ $acara->waktu?->format('H:i') ?? 'N/A' }}</p>
                         </td>
-                        <td class="px-6 py-5 text-right">
-                            <div class="flex items-center gap-2 justify-end">
-                                <button onclick="openEditModalFromRow(this)" 
-                                    class="p-2 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 rounded-xl transition-all duration-200 hover:scale-105 group"
-                                    title="Edit">
-                                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.5h3m1  -6l4 4 6-6 4-4"/>
+                        <td class="px-6 py-5">
+                            <p class="text-sm text-gray-900 dark:text-gray-100 max-w-xs truncate" title="{{ $acara->tempat }}">{{ \Illuminate\Support\Str::limit($acara->tempat ?? 'N/A', 30) }}</p>
+                        </td>
+                        <td class="px-6 py-5">
+                            <p class="text-sm text-gray-900 dark:text-gray-100 max-w-xs truncate font-medium" title="{{ $acara->user?->name ?? 'N/A' }}">{{ $acara->user?->name ?? 'N/A' }}</p>
+                        </td>
+                        <td class="px-6 py-5">
+                            @if($acara->image)
+<div class="flex items-center justify-center">
+    <a href="{{ asset('storage/' . $acara->image) }}" target="_blank" 
+        class="inline-flex items-center p-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-xs font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+        title="Lihat Gambar">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.638 19.5 12 19.5s-8.573-3.007-9.963-7.178z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+    </a>
+</div>
+@endif
+
+                        </td>
+                        <td class="px-6 py-5 text-center">
+                            <div class="flex items-center justify-center gap-1">
+                                <!-- Edit Button -->
+                                <button onclick="openEditModalFromRow(this)"
+                                    class="p-2.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-100 dark:text-emerald-400 dark:hover:text-emerald-300 dark:hover:bg-emerald-900/30 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
+                                    title="Edit acara">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M16.862 4.487L19.5 7.125"/>
                                     </svg>
                                 </button>
-                                <button onclick="openDeleteModal({{ $acara->id }}, '{{ addslashes($acara->name) }}')" 
-                                    class="p-2 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-xl transition-all duration-200 hover:scale-105 group"
-                                    title="Hapus">
-                                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                <!-- Delete Button -->
+                                <button onclick="openDeleteModal({{ $acara->id }}, @json($acara->name))"
+                                    class="p-2.5 text-red-600 hover:text-red-800 hover:bg-red-100 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/30 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
+                                    title="Hapus acara">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
                                     </svg>
                                 </button>
                             </div>
@@ -180,20 +243,21 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-20 text-center">
-                            <div class="flex flex-col items-center gap-4">
-                                <div class="w-20 h-20 bg-slate-100 dark:bg-slate-700 rounded-2xl flex items-center justify-center mx-auto">
-                                    <svg class="w-12 h-12 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        <td colspan="9" class="px-6 py-20 text-center">
+                            <div class="max-w-md mx-auto text-gray-500 dark:text-gray-400">
+                                <div class="w-24 h-24 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+                                    <svg class="w-12 h-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75l3 3m0 0l3-3m-3 3v-7.5M8.25 21h7.5"/>
                                     </svg>
                                 </div>
-                                <div class="text-center">
-                                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-1">Belum ada acara</h3>
-                                    <p class="text-slate-500 dark:text-slate-400">Mulai tambahkan acara HIMANIKKA pertama Anda</p>
-                                </div>
-                                <button onclick="openCreateModal()" 
-                                    class="px-6 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl hover:from-emerald-600 hover:to-emerald-700 focus:ring-4 focus:ring-emerald-200 transition-all duration-300">
-                                    Tambah Acara
+                                <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Belum ada acara</h3>
+                                <p class="text-lg mb-8">Mulai dengan menambahkan acara HIMANIKKA pertama Anda</p>
+                                <button @click="openCreateModal()" 
+                                    class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-semibold rounded-xl shadow-lg transition-all duration-200">
+                                    <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                                    </svg>
+                                    Tambah acara Pertama
                                 </button>
                             </div>
                         </td>
@@ -202,40 +266,9 @@
                 </tbody>
             </table>
         </div>
-
-        
     </div>
 </div>
 
-{{-- MODALS -- Include modal code here --}}
+{{-- Modals --}}
 @include('admin.acara.modals')
-
-{{-- Custom Pagination View --}}
-@if(!view()->exists('vendor.pagination.tailwind-custom'))
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Search functionality
-    const searchInput = document.getElementById('searchInput');
-    const statusFilter = document.getElementById('statusFilter');
-    
-    if (searchInput) {
-        searchInput.addEventListener('input', debounce(function() {
-            window.location.href = new URLSearchParams({
-                search: this.value,
-                status: statusFilter?.value || ''
-            }).toString();
-        }, 300));
-    }
-    
-    if (statusFilter) {
-        statusFilter.addEventListener('change', function() {
-            window.location.href = new URLSearchParams({
-                search: searchInput?.value || '',
-                status: this.value
-            }).toString();
-        });
-    }
-});
-</script>
-@endif
 @endsection

@@ -49,17 +49,41 @@
 
         {{-- Chart Placeholder --}}
         <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 shadow-xl border border-slate-200/50 dark:border-slate-700/50">
-            <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Grafik Bulanan</h3>
-            <div class="h-64 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-700 dark:to-slate-600 rounded-2xl flex items-center justify-center border-2 border-dashed border-slate-300 dark:border-slate-600">
-                <div class="text-center text-slate-500 dark:text-slate-400">
-                    <svg class="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                    </svg>
-                    <p class="text-lg font-semibold">Grafik Keuangan</p>
-                    <p class="text-sm">Pendapatan vs Pengeluaran</p>
-                </div>
+    <div class="flex justify-between items-center mb-6">
+        <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Grafik Bulanan</h3>
+        <select id="monthSelect" class="px-4 py-2 text-sm bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+            <option value="2026-03">Maret 2026</option>
+            <option value="2026-02">Februari 2026</option>
+            <option value="2026-01">Januari 2026</option>
+        </select>
+    </div>
+    
+    <div class="relative h-80 bg-gradient-to-r from-slate-50/50 to-slate-100/50 dark:from-slate-700/50 dark:to-slate-600/50 rounded-2xl border-2 border-slate-200/50 dark:border-slate-600/50 p-6">
+        <!-- Loading State -->
+        <div id="chartLoading" class="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl z-10">
+            <div class="text-center">
+                <div class="w-12 h-12 border-4 border-emerald-200 border-t-emerald-500 rounded-full animate-spin mx-auto mb-4"></div>
+                <p class="text-slate-500 dark:text-slate-400 font-medium">Memuat grafik...</p>
             </div>
         </div>
+        
+        <!-- Chart Container -->
+        <canvas id="financeChart" class="w-full h-full"></canvas>
+        
+        <!-- Legend -->
+        <div id="chartLegend" class="absolute bottom-4 left-4 flex gap-4 bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm px-4 py-2 rounded-xl border border-slate-200/50 dark:border-slate-700/50 shadow-lg hidden">
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-3 bg-emerald-500 rounded-full shadow-sm"></div>
+                <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Pendapatan</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-3 bg-red-500 rounded-full shadow-sm"></div>
+                <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Pengeluaran</span>
+            </div>
+        </div>
+    </div>
+</div>
+
     </div>
 
     {{-- Filters & Table --}}
@@ -161,7 +185,7 @@
                             </div>
                             @if($keuangan->keterangan)
                                 <div class="text-xs text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">
-                                    {{ Str::limit($keuangan->keterangan, 60) }}
+                                    {{ $keuangan->keterangan }}
                                 </div>
                             @endif
                         </td>
@@ -213,19 +237,19 @@
                                         <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
                                         </svg>
-                                        {{ Str::limit($keuangan->pendaftaran->name ?? 'Pendaftaran #' . $keuangan->pendaftaran_id, 25) }}
+                                        {{ \Illuminate\Support\Str::limit($keuangan->pendaftaran->name ?? 'Pendaftaran #' . $keuangan->pendaftaran_id, 25) }}
                                     </span>
                                 @elseif($keuangan->event)
                                     <span class="inline-flex items-center gap-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-2 py-1 rounded-full font-medium">
-                                        🎪 {{ Str::limit($keuangan->event->name ?? 'Event #' . $keuangan->event_id, 25) }}
+                                        🎪 {{ \Illuminate\Support\Str::limit($keuangan->event->name ?? 'Event #' . $keuangan->event_id, 25) }}
                                     </span>
                                 @elseif($keuangan->kegiatan)
                                     <span class="inline-flex items-center gap-1 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-2 py-1 rounded-full font-medium">
-                                        ⚡ {{ Str::limit($keuangan->kegiatan->name ?? 'Kegiatan #' . $keuangan->kegiatan_id, 25) }}
+                                        ⚡ {{ \Illuminate\Support\Str::limit($keuangan->kegiatan->name ?? 'Kegiatan #' . $keuangan->kegiatan_id, 25) }}
                                     </span>
                                 @elseif($keuangan->acara)
                                     <span class="inline-flex items-center gap-1 text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full font-medium">
-                                        🎉 {{ Str::limit($keuangan->acara->name ?? 'Acara #' . $keuangan->acara_id, 25) }}
+                                        🎉 {{ \Illuminate\Support\Str::limit($keuangan->acara->name ?? 'Acara #' . $keuangan->acara_id, 25) }}
                                     </span>
                                 @else
                                     <span class="text-xs text-slate-500 dark:text-slate-400 italic">Tanpa referensi</span>
@@ -291,3 +315,88 @@
 {{-- MODALS & JAVASCRIPT --}}
 @include('admin.keuangan.modals')
 @endsection
+
+
+{{-- ✅ SCRIPT DI PUSH KE LAYOUT --}}
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Chart check:', typeof Chart);
+    
+    if (typeof Chart === 'undefined') {
+        console.error('❌ Chart.js GAGAL load!');
+        return;
+    }
+
+    console.log('✅ Chart.js OK, init chart...');
+    let financeChart = null;
+    
+    const sampleData = {
+        '2026-03': { labels: ['1', '8', '15', '22', '29'], income: [1200000, 1500000, 1800000, 1400000, 2200000], expenses: [800000, 950000, 1100000, 900000, 1300000] },
+        '2026-02': { labels: ['1', '8', '15', '22'], income: [1100000, 1300000, 1600000, 1900000], expenses: [700000, 850000, 1000000, 1200000] },
+        '2026-01': { labels: ['5', '12', '19', '26'], income: [900000, 1400000, 1700000, 2000000], expenses: [600000, 800000, 950000, 1100000] }
+    };
+
+    function initChart(data) {
+        const canvas = document.getElementById('financeChart');
+        if (!canvas) return console.error('❌ Canvas tidak ada');
+
+        const ctx = canvas.getContext('2d');
+        if (financeChart) financeChart.destroy();
+
+        financeChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: 'Pendapatan',
+                        data: data.income,
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 4, fill: true, tension: 0.4,
+                        pointBackgroundColor: '#10b981', pointBorderColor: '#fff',
+                        pointBorderWidth: 3, pointRadius: 8
+                    },
+                    {
+                        label: 'Pengeluaran',
+                        data: data.expenses,
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderWidth: 4, fill: true, tension: 0.4,
+                        pointBackgroundColor: '#ef4444', pointBorderColor: '#fff',
+                        pointBorderWidth: 3, pointRadius: 8
+                    }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { callback: v => 'Rp ' + v.toLocaleString('id-ID') }
+                    }
+                },
+                animation: { duration: 1200 }
+            }
+        });
+
+        document.getElementById('chartLoading').style.display = 'none';
+        document.getElementById('chartLegend')?.classList.remove('hidden');
+    }
+
+    // Load awal
+    setTimeout(() => initChart(sampleData['2026-03']), 200);
+
+    // Month change
+    document.getElementById('monthSelect')?.addEventListener('change', e => {
+        document.getElementById('chartLoading').style.display = 'flex';
+        document.getElementById('chartLegend')?.classList.add('hidden');
+        setTimeout(() => initChart(sampleData[e.target.value] || sampleData['2026-03']), 300);
+    });
+});
+</script>
+@endpush
+

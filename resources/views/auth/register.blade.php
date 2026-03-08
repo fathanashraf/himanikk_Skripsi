@@ -131,7 +131,7 @@
                                        @error('nim') border-red-400 bg-red-50/70 dark:bg-red-900/30 shadow-red-200/50 @enderror"
                                 placeholder="Enter your student ID"
                                 value="{{ old('nim') }}"
-                                required 
+                                nullable
                                 maxlength="20" />
                             <div class="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 peer-focus:text-indigo-500 transition-colors">
                                 <i class="fas fa-id-card text-lg"></i>

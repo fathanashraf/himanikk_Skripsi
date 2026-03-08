@@ -18,74 +18,86 @@ class PendaftaranAdminController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-{
-    $search = $request->get('search');
-    $status = $request->get('status');
-    $jenisPendaftaran = $request->get('jenis_pendaftaran');
+    {
+        $search = $request->get('search');
+        $status = $request->get('status');
+        $jenisPendaftaran = $request->get('jenis_pendaftaran');
 
-    $query = Pendaftaran::with(['users', 'kegiatan', 'event', 'acara'])
-        ->latest('created_at');
+        $query = Pendaftaran::with(['user', 'kegiatan', 'events', 'acara'])
+            ->latest('created_at');
 
-    // Filter pencarian
-    if ($search) {
-        $query->search($search);
+        // ✅ FIX 1: Search scope (implement manual)
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('keterangan', 'like', "%{$search}%");
+            })
+            ->orWhereHas('user', function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        // ✅ FIX 2: Status filter
+        if ($status && in_array($status, ['proses', 'diterima', 'ditolak'])) {
+            $query->where('status', $status);
+        }
+
+        // ✅ FIX 3: Jenis pendaftaran filter
+        if ($jenisPendaftaran && in_array($jenisPendaftaran, ['acara', 'kegiatan', 'events'])) {
+            if ($jenisPendaftaran === 'acara') {
+                $query->whereNotNull('acara_id');
+            } elseif ($jenisPendaftaran === 'kegiatan') {
+                $query->whereNotNull('kegiatan_id');
+            } elseif ($jenisPendaftaran === 'events') {
+                $query->whereNotNull('event_id');
+            }
+        }
+
+        $pendaftarans = $query->paginate(15)->appends($request->only(['search', 'status', 'jenis_pendaftaran']));
+
+        // ✅ FIX 4: Statistik (gunakan query builder)
+        $stats = [
+            'total' => Pendaftaran::count(),
+            'proses' => Pendaftaran::where('status', 'proses')->count(),
+            'diterima' => Pendaftaran::where('status', 'diterima')->count(),
+            'ditolak' => Pendaftaran::where('status', 'ditolak')->count(),
+            'dengan_bukti' => Pendaftaran::whereNotNull('bukti')->count(),
+        ];
+
+        // ✅ Data untuk modals (optimized dengan limit)
+        $users = User::select('id', 'name', 'email')
+            ->orderBy('name')
+            ->limit(100) // Hindari loading terlalu banyak
+            ->get();
+
+        $acaras = Acara::select('id', 'name')
+            ->orderBy('name')
+            ->get();
+
+        $kegiatans = Kegiatan::select('id', 'name')
+            ->orderBy('name')
+            ->get();
+
+        $events = Event::select('id', 'name')
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.pendaftaran.index', compact(
+            'pendaftarans',
+            'stats',
+            'search',
+            'status',
+            'jenisPendaftaran',
+            'users',
+            'acaras',
+            'kegiatans',
+            'events'
+        ));
     }
 
-    // Filter status
-    if ($status && in_array($status, ['proses', 'diterima', 'ditolak'])) {
-        $query->status($status);
-    }
-
-    // Filter jenis pendaftaran
-    if ($jenisPendaftaran && in_array($jenisPendaftaran, ['acara', 'kegiatan', 'event', 'dll'])) {
-        $query->jenisPendaftaran($jenisPendaftaran);
-    }
-
-    $pendaftarans = $query->paginate(15)->appends($request->only(['search', 'status', 'jenis_pendaftaran']));
-
-    // Statistik
-    $stats = [
-        'total' => Pendaftaran::count(),
-        'proses' => Pendaftaran::status('proses')->count(),
-        'diterima' => Pendaftaran::status('diterima')->count(),
-        'ditolak' => Pendaftaran::status('ditolak')->count(),
-        'dengan_bukti' => Pendaftaran::denganBukti()->count(),
-    ];
-
-    // 🔥 DATA UNTUK MODALS - TAMBAHKAN INI
-    $users = User::select('id', 'name', 'email')
-        ->orderBy('name')
-        ->get();
-
-    $acaras = Acara::select('id', 'name')
-        ->orderBy('name')
-        ->get();
-
-    $kegiatans = Kegiatan::select('id', 'name')
-        ->orderBy('name')
-        ->get();
-
-    $events = Event::select('id', 'name')
-        ->orderBy('name')
-        ->get();
-
-    return view('admin.pendaftaran.index', compact(
-        'pendaftarans',
-        'stats',
-        'search',
-        'status',
-        'jenisPendaftaran',
-        'users',      // ✅ Untuk dropdown user_id
-        'acaras',     // ✅ Untuk dropdown acara_id
-        'kegiatans',  // ✅ Untuk dropdown kegiatan_id
-        'events'      // ✅ Untuk dropdown event_id
-    ));
-}
-
-
-    /**
-     * Store a newly created resource in storage (AJAX).
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([

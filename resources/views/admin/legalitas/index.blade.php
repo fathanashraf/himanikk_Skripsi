@@ -278,10 +278,10 @@
     <div class="bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/20 p-8 rounded-3xl border-l-8 border-orange-500 shadow-2xl">
         <div class="flex items-center gap-4 mb-6">
             <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-orange-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl">📄</div>
-            <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex-1">AD/ART HIMANIKKA</h3>
+            <h3 class="text-2xl font-bold text-slate-900 dark:text-white flex-1">Lagu Instrumen</h3>
             <button @click="openViewer('{{ asset('storage/' . $profil->instrumen) }}', 'pdf', '{{ basename($profil->instrumen) }}')" 
                     class="px-8 py-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all">
-                <i class="fas fa-file-pdf mr-2"></i>Lihat Dokumen
+                <i class="fas fa-file-video mr-2"></i>Lihat Instrumen
             </button>
         </div>
     </div>

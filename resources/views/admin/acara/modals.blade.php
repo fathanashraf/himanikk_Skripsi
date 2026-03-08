@@ -20,7 +20,7 @@
                     <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Nama Acara *</label>
                     <input type="text" name="name" required 
                         class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
-                        placeholder="Masukkan nama acara">
+                        placeholder="Masukkan nama Acara">
                 </div>
 
                 {{-- Deskripsi --}}
@@ -28,24 +28,89 @@
                     <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Deskripsi *</label>
                     <textarea name="description" required rows="4"
                         class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 resize-vertical"
-                        placeholder="Masukkan deskripsi acara"></textarea>
+                        placeholder="Masukkan deskripsi Acara"></textarea>
                 </div>
 
-                {{-- Status --}}
-                <div class="relative">
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Status *</label>
-                    <select name="status" required 
-                        class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
-                        <option value="">-- Pilih Status --</option>
-                        <option value="0">Draft</option>
-                        <option value="1">Published</option>
-                        <option value="2">Archived</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none top-14">
-                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                {{-- Grid untuk fields --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Status --}}
+                    <div class="relative">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Status</label>
+                        <select name="status" required 
+                            class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="segera">Segera</option>
+                            <option value="belum" selected>Belum</option>
+                            <option value="selesai">Selesai</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none top-14">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
                     </div>
+
+                    {{-- Tanggal --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-calendar-alt text-emerald-500"></i>
+                            Tanggal Acara *
+                        </label>
+                        <input 
+                            type="date" 
+                            name="tanggal" 
+                            min="{{ now()->format('Y-m-d') }}" 
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Waktu --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-clock text-orange-500"></i>
+                            Jam Mulai *
+                        </label>
+                        <input 
+                            type="time" 
+                            name="waktu" 
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+
+                    {{-- Tempat --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-blue-500"></i>
+                            Tempat Acara *
+                        </label>
+                        <input 
+                            type="text" 
+                            name="tempat" 
+                            placeholder="Contoh: Aula Serbaguna UIN Suska Riau"
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+                </div>
+
+                {{-- Penanggung Jawab --}}
+                {{-- Penanggung Jawab --}}
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                        <i class="fas fa-user-tie text-purple-500"></i>
+                        Penanggung Jawab *
+                    </label>
+                    <select name="user_id" id="createUserId" required 
+                        class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
+                        <option value="">Pilih Penanggung Jawab</option>
+                        @foreach($users ?? [] as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->email }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 {{-- Gambar --}}
@@ -64,8 +129,8 @@
                     <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Link (Opsional)</label>
                     <input type="url" name="link" 
                         class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
-                        placeholder="https://example.com/acara">
-                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Link ke website acara atau pendaftaran</p>
+                        placeholder="https://example.com/Acara">
+                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Link ke website Acara atau pendaftaran</p>
                 </div>
 
                 {{-- Buttons --}}
@@ -111,7 +176,7 @@
                     <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Nama Acara *</label>
                     <input type="text" name="name" id="editName" required 
                         class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
-                        placeholder="Masukkan nama acara">
+                        placeholder="Masukkan nama Acara">
                 </div>
 
                 {{-- Deskripsi --}}
@@ -119,24 +184,91 @@
                     <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Deskripsi *</label>
                     <textarea name="description" id="editDescription" required rows="4"
                         class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 resize-vertical"
-                        placeholder="Masukkan deskripsi acara"></textarea>
+                        placeholder="Masukkan deskripsi Acara"></textarea>
                 </div>
 
-                {{-- Status --}}
-                <div class="relative">
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Status *</label>
-                    <select name="status" id="editStatus" required 
-                        class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl 
-                               focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
-                        <option value="0">Draft</option>
-                        <option value="1">Published</option>
-                        <option value="2">Archived</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none top-14">
-                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                {{-- Grid untuk fields --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Status --}}
+                    <div class="relative">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Status *</label>
+                        <select name="status" id="editStatus" required 
+                            class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl 
+                                   focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
+                            <option value="segera">Segera</option>
+                            <option value="belum">Belum</option>
+                            <option value="selesai">Selesai</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none top-14">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
                     </div>
+
+                    {{-- Tanggal --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-calendar-alt text-emerald-500"></i>
+                            Tanggal Acara *
+                        </label>
+                        <input 
+                            type="date" 
+                            name="tanggal" 
+                            id="editTanggal" 
+                            min="{{ now()->format('Y-m-d') }}" 
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Waktu --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-clock text-orange-500"></i>
+                            Jam Mulai *
+                        </label>
+                        <input 
+                            type="time" 
+                            name="waktu" 
+                            id="editWaktu" 
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+
+                    {{-- Tempat --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-blue-500"></i>
+                            Tempat Acara *
+                        </label>
+                        <input 
+                            type="text" 
+                            name="tempat" 
+                            id="editTempat"
+                            placeholder="Contoh: Aula Serbaguna UIN Suska Riau"
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+                </div>
+
+                {{-- Penanggung Jawab --}}
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                        <i class="fas fa-user-tie text-purple-500"></i>
+                        Penanggung Jawab *
+                    </label>
+                    <select name="user_id" id="editUserId" required 
+                        class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
+                        <option value="">Pilih Penanggung Jawab</option>
+                        @foreach($users ?? [] as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->email }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 {{-- Gambar --}}
@@ -162,7 +294,7 @@
                     <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3">Link</label>
                     <input type="url" name="link" id="editLink" 
                         class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
-                        placeholder="https://example.com/acara">
+                        placeholder="https://example.com/Acara">
                 </div>
 
                 {{-- Buttons --}}
@@ -184,7 +316,7 @@
     </div>
 </div>
 
-{{-- DELETE MODAL --}}
+{{-- DELETE MODAL (tidak berubah) --}}
 <div id="deleteAcaraModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-md w-full mx-4">
         <div class="p-8 text-center">
@@ -194,7 +326,7 @@
                 </svg>
             </div>
             <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Hapus Acara?</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-400 mb-6" id="deleteAcaraName">Apakah Anda yakin ingin menghapus acara ini?</p>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-6" id="deleteAcaraName">Apakah Anda yakin ingin menghapus Acara ini?</p>
             <input type="hidden" id="deleteAcaraId">
             <div class="flex gap-3">
                 <button type="button" onclick="closeDeleteModal()" 
@@ -339,23 +471,28 @@
         hideErrors('editErrors');
     };
 
-    window.openEditModal = function(id, acaraData) {
+    // ✅ UPDATED: Sesuai schema database baru
+    window.openEditModal = function(id, AcaraData) {
         const modal = document.getElementById('editAcaraModal');
         document.getElementById('editAcaraId').value = id;
-        document.getElementById('editName').value = acaraData.name || '';
-        document.getElementById('editDescription').value = acaraData.description || '';
-        document.getElementById('editStatus').value = acaraData.status || '0';
-        document.getElementById('editLink').value = acaraData.link || '';
+        document.getElementById('editName').value = AcaraData.name || '';
+        document.getElementById('editDescription').value = AcaraData.description || '';
+        document.getElementById('editStatus').value = AcaraData.status || 'belum'; // Default sesuai DB
+        document.getElementById('editTanggal').value = AcaraData.tanggal || '';
+        document.getElementById('editWaktu').value = AcaraData.waktu || '';
+        document.getElementById('editTempat').value = AcaraData.tempat || '';
+        document.getElementById('editUserId').value = AcaraData.user_id || '';
+        document.getElementById('editLink').value = AcaraData.link || '';
         
         // Show current image info
         const imageInfo = document.getElementById('currentImageInfo');
         const imagePreview = document.getElementById('currentImagePreview');
         const imageName = document.getElementById('currentImageName');
         
-        if (acaraData.image) {
-            imageName.textContent = acaraData.image.split('/').pop();
-            imagePreview.src = acaraData.image;
+        if (AcaraData.image) {
+            imagePreview.src = AcaraData.image;
             imagePreview.classList.remove('hidden');
+            imageName.textContent = AcaraData.image.split('/').pop();
             imageInfo?.classList.remove('hidden');
         } else {
             imageInfo?.classList.add('hidden');
@@ -368,23 +505,23 @@
     // Untuk table row edit button
     window.openEditModalFromRow = function(button) {
         const row = button.closest('tr');
-        const id = row.dataset.acaraId;
-        let acaraData;
+        const id = row.dataset.AcaraId;
+        let AcaraData;
         
         try {
-            acaraData = JSON.parse(row.dataset.acaraData || '{}');
+            AcaraData = JSON.parse(row.dataset.AcaraData || '{}');
         } catch (e) {
-            console.error('Error parsing acara data:', e);
-            showNotification('Data acara tidak valid', 'error');
+            console.error('Error parsing Acara data:', e);
+            showNotification('Data Acara tidak valid', 'error');
             return;
         }
         
-        openEditModal(id, acaraData);
+        openEditModal(id, AcaraData);
     };
 
     window.openDeleteModal = function(id, name) {
         document.getElementById('deleteAcaraId').value = id;
-        document.getElementById('deleteAcaraName').textContent = `Apakah Anda yakin ingin menghapus acara "${name}"?`;
+        document.getElementById('deleteAcaraName').textContent = `Apakah Anda yakin ingin menghapus Acara "${name}"?`;
         document.getElementById('deleteAcaraModal')?.classList.remove('hidden');
     };
 
@@ -519,7 +656,7 @@
                         closeDeleteModal();
                         refreshData();
                     } else {
-                        throw new Error(result.message || 'Gagal menghapus acara');
+                        throw new Error(result.message || 'Gagal menghapus Acara');
                     }
                 } catch (error) {
                     console.error('Delete error:', error);

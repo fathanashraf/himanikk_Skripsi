@@ -14,100 +14,86 @@ class Acara extends Model
 
     protected $fillable = [
         'name',
-        'description', 
+        'description',
         'status',
+        'tanggal',
+        'waktu',
+        'tempat',
+        'user_id',
         'image',
-        'link'
+        'link',
     ];
 
     protected $casts = [
-        'status' => 'integer',
+        'tanggal' => 'date',
+        'waktu' => 'datetime:H:i',
     ];
 
+    
     // Status constants
-    const STATUS_DRAFT = 0;
-    const STATUS_PUBLISHED = 1;
-    const STATUS_ARCHIVED = 2;
+    const STATUS_segera = 0;
+    const STATUS_belum = 1;
+    const STATUS_selesai = 2;
 
     // Status labels
     public static function getStatusLabels(): array
     {
         return [
-            self::STATUS_DRAFT => 'Draft',
-            self::STATUS_PUBLISHED => 'Dipublikasikan',
-            self::STATUS_ARCHIVED => 'Arsip'
+            self::STATUS_segera => 'segera',
+            self::STATUS_belum => 'belum',
+            self::STATUS_selesai => 'selesai',
         ];
     }
 
-    // Status colors for frontend
-    public static function getStatusClasses(): array
+    // Status badge colors
+    public static function getStatusColors(): array
     {
         return [
-            self::STATUS_DRAFT => 'bg-yellow-100 text-yellow-800',
-            self::STATUS_PUBLISHED => 'bg-emerald-100 text-emerald-800',
-            self::STATUS_ARCHIVED => 'bg-gray-100 text-gray-800'
+            self::STATUS_segera => 'bg-yellow-100 text-yellow-800',
+            self::STATUS_belum => 'bg-emerald-100 text-emerald-800',
+            self::STATUS_selesai => 'bg-gray-100 text-gray-800',
         ];
     }
 
-    // Accessors
-    protected function status(): Attribute
+    // Scope for belum activities
+    public function scopebelum($query)
+    {
+        return $query->where('status', self::STATUS_belum);
+    }
+
+    // Accessor for status label
+    protected function statusLabel(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => (int) $value,
+            get: fn () => self::getStatusLabels()[$this->status] ?? 'Unknown'
         );
     }
 
-    // Scope untuk filtering berdasarkan status
-    public function scopePublished($query)
+    // Image URL
+    protected function imageUrl(): Attribute
     {
-        return $query->where('status', self::STATUS_PUBLISHED);
+        return Attribute::make(
+            get: fn ($value) => $this->image ? asset('storage/' . $this->image) : null
+        );
     }
 
-    public function scopeDraft($query)
+    public function user()
     {
-        return $query->where('status', self::STATUS_DRAFT);
+        return $this->belongsTo(User::class,'user_id');
     }
 
-    public function scopeArchived($query)
+    public function masukkans()
     {
-        return $query->where('status', self::STATUS_ARCHIVED);
+        return $this->hasMany(Masukkan::class, 'acara_id');
     }
 
-    // Helper methods
-    public function isPublished(): bool
+    public function pendaftars()
     {
-        return $this->status === self::STATUS_PUBLISHED;
+        return $this->hasMany(Pendaftaran::class, 'acara_id');
     }
 
-    public function isDraft(): bool
+    public function getWaPenanggungJawabAttribute()
     {
-        return $this->status === self::STATUS_DRAFT;
-    }
-
-    public function isArchived(): bool
-    {
-        return $this->status === self::STATUS_ARCHIVED;
-    }
-
-    // Get image URL
-    public function getImageUrlAttribute(): ?string
-    {
-        if (!$this->image) {
-            return null;
-        }
-        
-        return asset('storage/' . $this->image);
-    }
-
-    // Get status label
-    public function getStatusLabelAttribute(): string
-    {
-        return self::getStatusLabels()[$this->status] ?? 'Unknown';
-    }
-
-    // Get status class
-    public function getStatusClassAttribute(): string
-    {
-        return self::getStatusClasses()[$this->status] ?? 'bg-gray-100 text-gray-800';
+        return $this->user?->phone;
     }
 }

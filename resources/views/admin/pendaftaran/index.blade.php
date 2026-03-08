@@ -173,154 +173,176 @@
                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-64">Pendaftar</th>
                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Kontak</th>
                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Referensi</th>
+                        <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider">Keterangan</th>
                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Status</th>
                         <th class="px-6 py-4 text-left text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-40">Dokumen</th>
                         <th class="px-6 py-4 text-center text-xs font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wider w-32">Aksi</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 dark:divide-slate-700">
-                    @forelse($pendaftarans ?? [] as $pendaftaran)
+                    @forelse($pendaftarans as $pendaftaran)
                     <tr class="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-all duration-200 group"
-                        data-pendaftaran-id="{{ $pendaftaran->id }}"
-                        data-pendaftaran-data="{{ json_encode([
-                            'id' => $pendaftaran->id,
-                            'name' => $pendaftaran->name,
-                            'email' => $pendaftaran->email,
-                            'phone' => $pendaftaran->phone,
-                            'status' => $pendaftaran->status,
-                            'image' => $pendaftaran->image,
-                            'bukti' => $pendaftaran->bukti,
-                            'keterangan' => $pendaftaran->keterangan,
-                            'link' => $pendaftaran->link,
-                            'user_id' => $pendaftaran->user_id,
-                            'kegiatan_id' => $pendaftaran->kegiatan_id,
-                            'event_id' => $pendaftaran->event_id,
-                            'acara_id' => $pendaftaran->acara_id
-                        ]) }}">
+                        data-modal-toggle="pendaftaran-modal-{{ $pendaftaran->id }}">
+                        <input type="hidden" name="id" value="{{ $pendaftaran->id }}">
 
                         {{-- Pendaftar --}}
-                        <td class="px-6 py-5">
-                            <div class="flex items-center space-x-3">
-                                @if($pendaftaran->image)
-                                <img src="{{ Storage::url($pendaftaran->image) }}" 
-                                     alt="{{ $pendaftaran->name }}" 
-                                     class="flex-shrink-0 w-10 h-10 rounded-2xl object-cover shadow-lg" 
-                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-                                @endif
-                                <div class="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-emerald-500 to-blue-600 rounded-2xl shadow-lg flex items-center justify-center {{ $pendaftaran->image ? 'hidden' : '' }}">
-                                    <svg class="w-5 h-5 text-white" fill="none" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.93 17.93 0 0112 21.75a17.93 17.93 0 01-2.499-.118z"/>
-                                    </svg>
-                                </div>
-                                <div class="min-w-0 flex-1">
-                                    <div class="font-semibold text-gray-900 dark:text-white truncate max-w-md group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                                        {{ $pendaftaran->name }}
-                                    </div>
-                                    <div class="text-xs text-gray-500 dark:text-gray-400 truncate max-w-xs">
-                                        {{ $pendaftaran->email }}
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+    <div class="flex items-center space-x-3">
+        {{-- Avatar --}}
+        @if($pendaftaran->image)
+            <img src="{{ asset('storage/' . $pendaftaran->image) }}" 
+                 alt="{{ $pendaftaran->name }}" 
+                 class="w-12 h-12 object-cover rounded-2xl shadow-lg ring-2 ring-white/50 hover:ring-white/80 transition-all duration-200"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        @endif
+        
+        {{-- Default Avatar --}}
+        <div class="flex-shrink-0 w-12 h-12 {{ $pendaftaran->image ? 'hidden' : '' }} bg-gradient-to-br from-emerald-500 to-blue-600 rounded-2xl shadow-lg flex items-center justify-center hover:scale-105 transition-all duration-200">
+            <svg class="w-6 h-6 text-white" fill="none" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.93 17.93 0 0112 21.75a17.93 17.93 0 01-2.499-.118z"/>
+            </svg>
+        </div>
+        
+        {{-- Name --}}
+        <div class="min-w-0 flex-1">
+            <span class="font-bold text-gray-900 dark:text-white text-base truncate hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                {{ $pendaftaran->name }}
+            </span>
+            <p class="text-sm text-gray-500 dark:text-gray-400 truncate">{{ $pendaftaran->created_at }}</p>
+        </div>
+    </div>
+</td>
+
 
                         {{-- Kontak --}}
                         <td class="px-6 py-5">
-                            <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $pendaftaran->phone }}</div>
-                            @if($pendaftaran->link)
-                            <a href="{{ $pendaftaran->link }}" target="_blank" 
-                               class="text-xs text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium truncate max-w-xs">
-                                🔗 {{ Str::limit($pendaftaran->link, 30) }}
-                            </a>
+                            @if ($pendaftaran->email)
+                                <span class="text-sm text-gray-900 dark:text-white">{{ $pendaftaran->phone }}</span>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">{{ $pendaftaran->email }}</p>
                             @endif
                         </td>
 
                         {{-- Referensi --}}
                         <td class="px-6 py-5">
-                            <div class="space-y-1 max-w-[200px]">
-                                @if($pendaftaran->acara)
-                                    <span class="inline-flex items-center gap-1 text-xs bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-300 px-2 py-1 rounded-full font-medium">
-                                        🎉 {{ Str::limit($pendaftaran->acara->name ?? 'Acara #' . $pendaftaran->acara_id, 25) }}
-                                    </span>
-                                @elseif($pendaftaran->event)
-                                    <span class="inline-flex items-center gap-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-2 py-1 rounded-full font-medium">
-                                        🎪 {{ Str::limit($pendaftaran->event->name ?? 'Event #' . $pendaftaran->event_id, 25) }}
-                                    </span>
-                                @elseif($pendaftaran->kegiatan)
-                                    <span class="inline-flex items-center gap-1 text-xs bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 px-2 py-1 rounded-full font-medium">
-                                        ⚡ {{ Str::limit($pendaftaran->kegiatan->name ?? 'Kegiatan #' . $pendaftaran->kegiatan_id, 25) }}
-                                    </span>
-                                @else
-                                    <span class="text-xs text-gray-500 dark:text-gray-400 italic">Tanpa referensi</span>
-                                @endif
-                            </div>
-                        </td>
+    @if($pendaftaran->acara_id && $pendaftaran->acara)
+        {{-- ACARA - Prioritas 1 --}}
+        <div class="space-y-1">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <span class="font-semibold text-gray-900 dark:text-white text-sm truncate max-w-xs">🎭 {{ $pendaftaran->acara->name }}</span>
+            </div>
+            @if($pendaftaran->acara->tanggal)
+                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ \Illuminate\Support\Carbon::parse($pendaftaran->acara->tanggal)->format('d M Y') }}</p>
+            @endif
+        </div>
+    @elseif($pendaftaran->kegiatan_id && $pendaftaran->kegiatan)
+        {{-- KEGIATAN - Prioritas 2 --}}
+        <div class="space-y-1">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                <span class="font-semibold text-indigo-600 dark:text-indigo-400 text-sm truncate max-w-xs">🔧 {{ $pendaftaran->kegiatan->name }}</span>
+            </div>
+            @if($pendaftaran->kegiatan->tanggal)
+                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ \Illuminate\Support\Carbon::parse($pendaftaran->kegiatan->tanggal)->format('d M Y') }}</p>
+            @endif
+        </div>
+    @elseif($pendaftaran->event_id && $pendaftaran->event)
+        {{-- EVENT - Prioritas 3 --}}
+        <div class="space-y-1">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                <span class="font-semibold text-emerald-600 dark:text-emerald-400 text-sm truncate max-w-xs">🎉 {{ $pendaftaran->event->name }}</span>
+            </div>
+            @if($pendaftaran->event->tanggal)
+                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">{{ \Illuminate\Support\Carbon::parse($pendaftaran->event->tanggal)->format('d M Y') }}</p>
+            @endif
+        </div>
+    @else
+        {{-- Pendaftaran Umum --}}
+        <div class="flex items-center gap-2 text-gray-400 dark:text-gray-500 italic text-sm">
+            <svg class="w-4 h-4" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Pendaftaran Umum
+        </div>
+    @endif
+</td>
+
+<td class="px-6 py-5">
+    @if ($pendaftaran->keterangan)
+        <span class="text-sm text-gray-900 dark:text-white">{{ $pendaftaran->keterangan }}</span>
+    @endif
+</td>
+
 
                         {{-- Status --}}
-                        <td class="px-6 py-5">
-                            @php
-                                $statusClass = match($pendaftaran->status) {
-                                    'diterima' => 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300',
-                                    'ditolak' => 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-                                    default => 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'
-                                };
-                                
-                                $statusText = match($pendaftaran->status) {
-                                    'diterima' => 'Diterima ✅',
-                                    'ditolak' => 'Ditolak ❌',
-                                    default => 'Diproses ⏳'
-                                };
-                            @endphp
-                            <span class="inline-flex px-4 py-2 {{ $statusClass }} border rounded-full text-sm font-semibold shadow-sm">
-                                {{ $statusText }}
-                            </span>
+                        <td class="px-5 py-5 items-center">
+                            @if ($pendaftaran->status_label)
+                                <span class="text-sm text-gray-900 dark:text-gray-100 font-mono">
+                                    {{ $pendaftaran->status_label }}
+                                </span>
+                            @endif
                         </td>
 
                         {{-- Dokumen --}}
                         <td class="px-6 py-5">
-                            <div class="flex flex-col gap-1">
-                                @if($pendaftaran->bukti)
-                                <div class="flex items-center gap-2">
-                                    <a href="{{ Storage::url($pendaftaran->bukti) }}" target="_blank" 
-                                       class="inline-flex items-center p-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white text-xs font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105">
-                                        <svg class="w-3 h-3" fill="none" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.638 19.5 12 19.5s-8.573-3.007-9.963-7.178z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        </svg>
-                                    </a>
-                                </div>
-                                @else
-                                <span class="px-3 py-1 bg-gray-100 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400 text-xs font-medium rounded-lg flex items-center gap-1">
-                                    <svg class="w-3 h-3" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                    Tidak ada bukti
-                                </span>
-                                @endif
+    @if($pendaftaran->bukti)
+        <div class="flex items-center gap-2">
+            {{-- View Button --}}
+            <a href="{{ asset('storage/' . $pendaftaran->bukti) }}" 
+               target="_blank" 
+               class="p-2.5 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 tooltip"
+               title="Lihat Dokumen">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+  <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+  <path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd" />
+</svg>
 
-                                @if($pendaftaran->keterangan)
-                                <div class="text-xs text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-800/50 px-2 py-1 rounded-lg truncate max-w-xs">
-                                    {{ Str::limit($pendaftaran->keterangan, 50) }}
-                                </div>
-                                @endif
-                            </div>
-                        </td>
+            </a>
+
+            {{-- Download Button --}}
+            <a href="{{ asset('storage/' . $pendaftaran->bukti) }}" 
+               download 
+               class="p-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white rounded-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 tooltip"
+               title="Download Dokumen">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+  <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
+  <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087ZM12 10.5a.75.75 0 0 1 .75.75v4.94l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72v-4.94a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+</svg>
+
+            </a>
+        </div>
+    @else
+        <div class="flex items-center gap-1 px-3 py-2 bg-gray-100 dark:bg-gray-900/50 text-gray-500 dark:text-gray-400 text-xs font-medium rounded-xl">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+  <path d="M3.375 3C2.339 3 1.5 3.84 1.5 4.875v.75c0 1.036.84 1.875 1.875 1.875h17.25c1.035 0 1.875-.84 1.875-1.875v-.75C22.5 3.839 21.66 3 20.625 3H3.375Z" />
+  <path fill-rule="evenodd" d="m3.087 9 .54 9.176A3 3 0 0 0 6.62 21h10.757a3 3 0 0 0 2.995-2.824L20.913 9H3.087ZM12 10.5a.75.75 0 0 1 .75.75v4.94l1.72-1.72a.75.75 0 1 1 1.06 1.06l-3 3a.75.75 0 0 1-1.06 0l-3-3a.75.75 0 1 1 1.06-1.06l1.72 1.72v-4.94a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+</svg>
+
+            Tidak ada bukti
+        </div>
+    @endif
+</td>
+
 
                         {{-- Aksi --}}
                         <td class="px-6 py-5 text-center">
                             <div class="flex items-center justify-center gap-1">
-                                <button onclick="openEditPendaftaranModalFromRow(this)"
+                                <button onclick="openEditPendaftaranModal({{$pendaftaran->id}})"
                                         class="p-2.5 text-emerald-600 hover:text-emerald-800 hover:bg-emerald-100 dark:text-emerald-400 dark:hover:text-emerald-300 dark:hover:bg-emerald-900/30 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
                                         title="Edit Pendaftaran">
-                                    <svg class="w-4 h-4" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M16.862 4.487L19.5 7.125"/>
-                                    </svg>
+                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+  <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+  <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+</svg>
+
                                 </button>
                                 <button onclick="openDeletePendaftaranModal({{ $pendaftaran->id }}, '{{ addslashes($pendaftaran->name) }}')"
         class="p-2.5 text-red-600 hover:text-red-800 hover:bg-red-100 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/30 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:scale-105"
         title="Hapus Pendaftaran">
-    <svg class="w-4 h-4" fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
-    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+  <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+</svg>
 </button>
 
                             </div>
@@ -344,20 +366,6 @@
                 </tbody>
             </table>
         </div>
-
-        {{-- Pagination --}}
-        @if(isset($pendaftarans) && $pendaftarans->hasPages())
-        <div class="px-6 py-6 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800/60 dark:to-slate-900/60 border-t border-gray-200 dark:border-slate-700">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                <div class="text-sm text-gray-700 dark:text-gray-400 mb-4 sm:mb-0">
-                    Menampilkan <span class="font-semibold">{{ $pendaftarans->firstItem() ?? 0 }}</span> -
-                    <span class="font-semibold">{{ $pendaftarans->lastItem() ?? 0 }}</span>
-                    dari <span class="font-semibold">{{ $pendaftarans->total() }}</span> pendaftaran
-                </div>
-                {{ $pendaftarans->appends(request()->query())->links('vendor.pagination.tailwind') }}
-            </div>
-        </div>
-        @endif
     </div>
 </div>
 

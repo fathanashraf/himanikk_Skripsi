@@ -14,26 +14,32 @@ class Kegiatan extends Model
         'name',
         'description',
         'status',
+        'tanggal',
+        'waktu',
+        'tempat',
+        'user_id',
         'image',
         'link',
     ];
 
     protected $casts = [
-        'status' => 'integer',
+        'tanggal' => 'date',
+        'waktu' => 'datetime:H:i',  
+        
     ];
 
     // Status constants
-    const STATUS_DRAFT = 0;
-    const STATUS_PUBLISHED = 1;
-    const STATUS_ARCHIVED = 2;
+    const STATUS_segera = 0;
+    const STATUS_belum = 1;
+    const STATUS_selesai = 2;
 
     // Status labels
     public static function getStatusLabels(): array
     {
         return [
-            self::STATUS_DRAFT => 'Draft',
-            self::STATUS_PUBLISHED => 'Published',
-            self::STATUS_ARCHIVED => 'Archived',
+            self::STATUS_segera => 'segera',
+            self::STATUS_belum => 'belum',
+            self::STATUS_selesai => 'selesai',
         ];
     }
 
@@ -41,16 +47,16 @@ class Kegiatan extends Model
     public static function getStatusColors(): array
     {
         return [
-            self::STATUS_DRAFT => 'bg-yellow-100 text-yellow-800',
-            self::STATUS_PUBLISHED => 'bg-emerald-100 text-emerald-800',
-            self::STATUS_ARCHIVED => 'bg-gray-100 text-gray-800',
+            self::STATUS_segera => 'bg-yellow-100 text-yellow-800',
+            self::STATUS_belum => 'bg-emerald-100 text-emerald-800',
+            self::STATUS_selesai => 'bg-gray-100 text-gray-800',
         ];
     }
 
-    // Scope for published activities
-    public function scopePublished($query)
+    // Scope for belum activities
+    public function scopebelum($query)
     {
-        return $query->where('status', self::STATUS_PUBLISHED);
+        return $query->where('status', self::STATUS_belum);
     }
 
     // Accessor for status label
@@ -73,5 +79,21 @@ class Kegiatan extends Model
     public function masukkans()
     {
         return $this->hasMany(Masukkan::class);
+    }
+    protected $with = ['user'];
+    // user relationship
+    public function user()
+    {
+        return $this->belongsTo(User::class,'user_id');
+    }
+
+    public function getWaPenanggungJawabAttribute()
+    {
+        return $this->user?->phone;
+    }
+
+    public function pendaftars()
+    {
+        return $this->hasMany(Pendaftaran::class, 'kegiatan_id');
     }
 }

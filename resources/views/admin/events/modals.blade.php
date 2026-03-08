@@ -1,9 +1,9 @@
 {{-- CREATE MODAL --}}
-<div id="createEventModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 hidden overflow-y-auto">
+<div id="createeventModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 hidden overflow-y-auto">
     <div class="relative top-20 mx-auto p-6 w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto">
         <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl">
             <div class="p-8 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center relative">
-                <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Tambah Event HIMANIKKA</h3>
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Tambah event HIMANIKKA</h3>
                 <button type="button" onclick="closeCreateModal()" class="p-3 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-all duration-200">
                     <svg class="w-6 h-6 text-slate-500 hover:text-slate-900 dark:hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -11,13 +11,13 @@
                 </button>
             </div>
             
-            <form id="createEventForm" enctype="multipart/form-data" class="p-8 space-y-6">
+            <form id="createeventForm" enctype="multipart/form-data" class="p-8 space-y-6">
                 {{-- Error Container --}}
                 <div id="createErrors" class="space-y-2 hidden"></div>
 
-                {{-- Nama Event --}}
+                {{-- Nama event --}}
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Nama Event *</label>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Nama event *</label>
                     <input type="text" name="name" required 
                         class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
                         placeholder="Masukkan nama event">
@@ -31,21 +31,86 @@
                         placeholder="Masukkan deskripsi event"></textarea>
                 </div>
 
-                {{-- Status --}}
-                <div class="relative">
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Status *</label>
-                    <select name="status" required 
-                        class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
-                        <option value="">-- Pilih Status --</option>
-                        <option value="0">Draft</option>
-                        <option value="1">Published</option>
-                        <option value="2">Archived</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none top-14">
-                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                {{-- Grid untuk fields --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Status --}}
+                    <div class="relative">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Status</label>
+                        <select name="status" required 
+                            class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
+                            <option value="">-- Pilih Status --</option>
+                            <option value="segera">Segera</option>
+                            <option value="belum" selected>Belum</option>
+                            <option value="selesai">Selesai</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none top-14">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
                     </div>
+
+                    {{-- Tanggal --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-calendar-alt text-emerald-500"></i>
+                            Tanggal event *
+                        </label>
+                        <input 
+                            type="date" 
+                            name="tanggal" 
+                            min="{{ now()->format('Y-m-d') }}" 
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Waktu --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-clock text-orange-500"></i>
+                            Jam Mulai *
+                        </label>
+                        <input 
+                            type="time" 
+                            name="waktu" 
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+
+                    {{-- Tempat --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-blue-500"></i>
+                            Tempat event *
+                        </label>
+                        <input 
+                            type="text" 
+                            name="tempat" 
+                            placeholder="Contoh: Aula Serbaguna UIN Suska Riau"
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+                </div>
+
+                {{-- Penanggung Jawab --}}
+                {{-- Penanggung Jawab --}}
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                        <i class="fas fa-user-tie text-purple-500"></i>
+                        Penanggung Jawab *
+                    </label>
+                    <select name="user_id" id="createUserId" required 
+                        class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
+                        <option value="">Pilih Penanggung Jawab</option>
+                        @foreach($users ?? [] as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->email }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 {{-- Gambar --}}
@@ -80,7 +145,7 @@
                         class="flex-1 px-8 py-4 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-emerald-600 
                                hover:from-emerald-600 hover:to-emerald-700 focus:ring-4 focus:ring-emerald-200 
                                rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                        Simpan Event
+                        Simpan event
                     </button>
                 </div>
             </form>
@@ -89,11 +154,11 @@
 </div>
 
 {{-- EDIT MODAL --}}
-<div id="editEventModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 hidden overflow-y-auto">
+<div id="editeventModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 hidden overflow-y-auto">
     <div class="relative top-20 mx-auto p-6 w-11/12 md:w-3/4 lg:w-1/2 max-h-[90vh] overflow-y-auto">
         <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl">
             <div class="p-8 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center relative">
-                <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Edit Event</h3>
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white">Edit event</h3>
                 <button type="button" onclick="closeEditModal()" class="p-3 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-xl transition-all duration-200">
                     <svg class="w-6 h-6 text-slate-500 hover:text-slate-900 dark:hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -101,14 +166,14 @@
                 </button>
             </div>
             
-            <form id="editEventForm" enctype="multipart/form-data" class="p-8 space-y-6">
-                <input type="hidden" name="id" id="editEventId">
+            <form id="editeventForm" enctype="multipart/form-data" class="p-8 space-y-6">
+                <input type="hidden" name="id" id="editeventId">
                 {{-- Error Container --}}
                 <div id="editErrors" class="space-y-2 hidden"></div>
 
-                {{-- Nama Event --}}
+                {{-- Nama event --}}
                 <div>
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Nama Event *</label>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Nama event *</label>
                     <input type="text" name="name" id="editName" required 
                         class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
                         placeholder="Masukkan nama event">
@@ -122,21 +187,88 @@
                         placeholder="Masukkan deskripsi event"></textarea>
                 </div>
 
-                {{-- Status --}}
-                <div class="relative">
-                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Status *</label>
-                    <select name="status" id="editStatus" required 
-                        class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl 
-                               focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
-                        <option value="0">Draft</option>
-                        <option value="1">Published</option>
-                        <option value="2">Archived</option>
-                    </select>
-                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none top-14">
-                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
+                {{-- Grid untuk fields --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Status --}}
+                    <div class="relative">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required">Status *</label>
+                        <select name="status" id="editStatus" required 
+                            class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl 
+                                   focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
+                            <option value="segera">Segera</option>
+                            <option value="belum">Belum</option>
+                            <option value="selesai">Selesai</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none top-14">
+                            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
                     </div>
+
+                    {{-- Tanggal --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-calendar-alt text-emerald-500"></i>
+                            Tanggal event *
+                        </label>
+                        <input 
+                            type="date" 
+                            name="tanggal" 
+                            id="editTanggal" 
+                            min="{{ now()->format('Y-m-d') }}" 
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Waktu --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-clock text-orange-500"></i>
+                            Jam Mulai *
+                        </label>
+                        <input 
+                            type="time" 
+                            name="waktu" 
+                            id="editWaktu" 
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+
+                    {{-- Tempat --}}
+                    <div>
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                            <i class="fas fa-map-marker-alt text-blue-500"></i>
+                            Tempat event *
+                        </label>
+                        <input 
+                            type="text" 
+                            name="tempat" 
+                            id="editTempat"
+                            placeholder="Contoh: Aula Serbaguna UIN Suska Riau"
+                            required
+                            class="w-full p-4 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200"
+                        >
+                    </div>
+                </div>
+
+                {{-- Penanggung Jawab --}}
+                <div>
+                    <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-3 required flex items-center gap-2">
+                        <i class="fas fa-user-tie text-purple-500"></i>
+                        Penanggung Jawab *
+                    </label>
+                    <select name="user_id" id="editUserId" required 
+                        class="w-full p-4 pl-12 pr-10 border border-slate-200 dark:border-slate-600 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent dark:bg-slate-700 dark:text-white transition-all duration-200 appearance-none">
+                        <option value="">Pilih Penanggung Jawab</option>
+                        @foreach($users ?? [] as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }} - {{ $user->email }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 {{-- Gambar --}}
@@ -176,7 +308,7 @@
                     <button type="submit" id="editSubmitBtn" 
                         class="flex-1 px-8 py-4 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-emerald-600 
                                hover:from-emerald-600 hover:to-emerald-700 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                        Update Event
+                        Update event
                     </button>
                 </div>
             </form>
@@ -184,8 +316,8 @@
     </div>
 </div>
 
-{{-- DELETE MODAL --}}
-<div id="deleteEventModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+{{-- DELETE MODAL (tidak berubah) --}}
+<div id="deleteeventModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl max-w-md w-full mx-4">
         <div class="p-8 text-center">
             <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 dark:bg-red-900/20 mb-6">
@@ -193,9 +325,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                 </svg>
             </div>
-            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Hapus Event?</h3>
-            <p class="text-sm text-slate-600 dark:text-slate-400 mb-6" id="deleteEventName">Apakah Anda yakin ingin menghapus event ini?</p>
-            <input type="hidden" id="deleteEventId">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Hapus event?</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400 mb-6" id="deleteeventName">Apakah Anda yakin ingin menghapus event ini?</p>
+            <input type="hidden" id="deleteeventId">
             <div class="flex gap-3">
                 <button type="button" onclick="closeDeleteModal()" 
                     class="flex-1 px-6 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300 
@@ -206,7 +338,7 @@
                 <button type="button" id="confirmDeleteBtn" 
                     class="flex-1 px-6 py-3 text-sm font-semibold text-white bg-red-500 hover:bg-red-600 
                            focus:ring-4 focus:ring-red-200 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl">
-                    Hapus Event
+                    Hapus event
                 </button>
             </div>
         </div>
@@ -310,8 +442,8 @@
     }
 
     function refreshData() {
-        if (window.Alpine && window.EventApp) {
-            window.EventApp.refreshData?.();
+        if (window.Alpine && window.eventApp) {
+            window.eventApp.refreshData?.();
         } else if (window.Livewire?.find) {
             window.Livewire.find(window.livewireComponentId)?.reload();
         } else {
@@ -321,30 +453,35 @@
 
     // === MODAL FUNCTIONS ===
     window.openCreateModal = function() {
-        document.getElementById('createEventModal')?.classList.remove('hidden');
+        document.getElementById('createeventModal')?.classList.remove('hidden');
         hideErrors('createErrors');
-        document.getElementById('createEventForm').reset();
+        document.getElementById('createeventForm').reset();
     };
 
     window.closeCreateModal = function() {
-        const modal = document.getElementById('createEventModal');
-        const form = document.getElementById('createEventForm');
+        const modal = document.getElementById('createeventModal');
+        const form = document.getElementById('createeventForm');
         modal?.classList.add('hidden');
         form?.reset();
         hideErrors('createErrors');
     };
 
     window.closeEditModal = function() {
-        document.getElementById('editEventModal')?.classList.add('hidden');
+        document.getElementById('editeventModal')?.classList.add('hidden');
         hideErrors('editErrors');
     };
 
+    // ✅ UPDATED: Sesuai schema database baru
     window.openEditModal = function(id, eventData) {
-        const modal = document.getElementById('editEventModal');
-        document.getElementById('editEventId').value = id;
+        const modal = document.getElementById('editeventModal');
+        document.getElementById('editeventId').value = id;
         document.getElementById('editName').value = eventData.name || '';
         document.getElementById('editDescription').value = eventData.description || '';
-        document.getElementById('editStatus').value = eventData.status || '0';
+        document.getElementById('editStatus').value = eventData.status || 'belum'; // Default sesuai DB
+        document.getElementById('editTanggal').value = eventData.tanggal || '';
+        document.getElementById('editWaktu').value = eventData.waktu || '';
+        document.getElementById('editTempat').value = eventData.tempat || '';
+        document.getElementById('editUserId').value = eventData.user_id || '';
         document.getElementById('editLink').value = eventData.link || '';
         
         // Show current image info
@@ -353,9 +490,9 @@
         const imageName = document.getElementById('currentImageName');
         
         if (eventData.image) {
-            imageName.textContent = eventData.image.split('/').pop();
             imagePreview.src = eventData.image;
             imagePreview.classList.remove('hidden');
+            imageName.textContent = eventData.image.split('/').pop();
             imageInfo?.classList.remove('hidden');
         } else {
             imageInfo?.classList.add('hidden');
@@ -383,19 +520,19 @@
     };
 
     window.openDeleteModal = function(id, name) {
-        document.getElementById('deleteEventId').value = id;
-        document.getElementById('deleteEventName').textContent = `Apakah Anda yakin ingin menghapus event "${name}"?`;
-        document.getElementById('deleteEventModal')?.classList.remove('hidden');
+        document.getElementById('deleteeventId').value = id;
+        document.getElementById('deleteeventName').textContent = `Apakah Anda yakin ingin menghapus event "${name}"?`;
+        document.getElementById('deleteeventModal')?.classList.remove('hidden');
     };
 
     window.closeDeleteModal = function() {
-        document.getElementById('deleteEventModal')?.classList.add('hidden');
+        document.getElementById('deleteeventModal')?.classList.add('hidden');
     };
 
     // === FORM SUBMISSIONS ===
     document.addEventListener('DOMContentLoaded', function() {
         // Create form
-        const createForm = document.getElementById('createEventForm');
+        const createForm = document.getElementById('createeventForm');
         if (createForm) {
             createForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -438,11 +575,11 @@
         }
 
         // Edit form
-        const editForm = document.getElementById('editEventForm');
+        const editForm = document.getElementById('editeventForm');
         if (editForm) {
             editForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const id = document.getElementById('editEventId').value;
+                const id = document.getElementById('editeventId').value;
                 const submitBtn = document.getElementById('editSubmitBtn');
                 const formData = new FormData(e.target);
                 
@@ -492,7 +629,7 @@
         const deleteBtn = document.getElementById('confirmDeleteBtn');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', async () => {
-                const id = document.getElementById('deleteEventId').value;
+                const id = document.getElementById('deleteeventId').value;
                 const submitBtn = document.getElementById('confirmDeleteBtn');
                 
                 if (!id) {
@@ -515,7 +652,7 @@
                     const result = await response.json();
 
                     if (response.ok) {
-                        showNotification(result.message || 'Event berhasil dihapus!', 'success');
+                        showNotification(result.message || 'event berhasil dihapus!', 'success');
                         closeDeleteModal();
                         refreshData();
                     } else {
@@ -531,7 +668,7 @@
         }
 
         // Close modals on outside click
-        document.querySelectorAll('#createEventModal, #editEventModal, #deleteEventModal').forEach(modal => {
+        document.querySelectorAll('#createeventModal, #editeventModal, #deleteeventModal').forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     window.closeCreateModal?.();

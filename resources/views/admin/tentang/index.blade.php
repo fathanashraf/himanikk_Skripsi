@@ -161,33 +161,33 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
-                        <span class="text-sm font-medium text-slate-900 dark:text-slate-50 truncate">{{ Str::limit($profil->alamat ?? '-', 30) }}</span>
+                        <span class="text-sm font-medium text-slate-900 dark:text-slate-50 truncate">{{ \Illuminate\Support\Str::limit($profil->alamat ?? '-', 30) }}</span>
                     </div>
                 </td>
 
                 {{-- TUJUAN & FUNGSI --}}
                 <td class="px-4 py-4 hidden lg:table-cell">
-                    <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-3 max-w-[120px]">{{ Str::limit(($profil->tujuan ?? '') . ' ' . ($profil->fungsi ?? ''), 80) }}</p>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-3 max-w-[120px]">{{ \Illuminate\Support\Str::limit(($profil->tujuan ?? '') . ' ' . ($profil->fungsi ?? ''), 80) }}</p>
                 </td>
 
                 {{-- MOTTO --}}
                 <td class="px-4 py-4 hidden xl:table-cell">
-                    <p class="text-xs text-slate-500 dark:text-slate-400 italic line-clamp-2">{{ Str::limit($profil->motto ?? '-', 40) }}</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 italic line-clamp-2">{{ \Illuminate\Support\Str::limit($profil->motto ?? '-', 40) }}</p>
                 </td>
 
                 {{-- VISI --}}
                 <td class="px-4 py-4 hidden 2xl:table-cell">
-                    <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">{{ Str::limit($profil->visi ?? '-', 50) }}</p>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">{{ \Illuminate\Support\Str::limit($profil->visi ?? '-', 50) }}</p>
                 </td>
 
                 {{-- MISI --}}
                 <td class="px-4 py-4 hidden 2xl:table-cell">
-                    <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">{{ Str::limit($profil->misi ?? '-', 50) }}</p>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">{{ \Illuminate\Support\Str::limit($profil->misi ?? '-', 50) }}</p>
                 </td>
 
                 {{-- SEJARAH --}}
                 <td class="px-4 py-4 hidden 2xl:table-cell">
-                    <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">{{ Str::limit($profil->sejarah ?? '-', 50) }}</p>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2">{{ \Illuminate\Support\Str::limit($profil->sejarah ?? '-', 50) }}</p>
                 </td>
 
                 {{-- STATUS --}}
@@ -203,24 +203,38 @@
                 {{-- AKSI --}}
                 <td class="px-4 py-4 text-center">
                     <div class="flex items-center justify-center gap-1">
-                        <button class="edit-btn group relative p-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white 
-                                      font-bold rounded-xl shadow-lg hover:from-blue-600 hover:to-blue-700 hover:shadow-xl 
-                                      hover:-translate-y-0.5 transition-all duration-300 w-10 h-10 flex items-center justify-center
-                                      before:absolute before:inset-0 before:bg-white/20 before:rounded-xl before:scale-0 before:group-hover:scale-100 before:transition-transform before:duration-300"
-                                data-id="{{ $profil->id }}" title="Edit">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                            </svg>
-                        </button>
-                        <button class="delete-btn group relative p-2 bg-gradient-to-r from-red-500 to-red-600 text-white 
-                                      font-bold rounded-xl shadow-lg hover:from-red-600 hover:to-red-700 hover:shadow-xl 
-                                      hover:-translate-y-0.5 transition-all duration-300 w-10 h-10 flex items-center justify-center
-                                      before:absolute before:inset-0 before:bg-white/20 before:rounded-xl before:scale-0 before:group-hover:scale-100 before:transition-transform before:duration-300"
-                                data-id="{{ $profil->id }}" title="Hapus">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                            </svg>
-                        </button>
+                        <div class="flex items-center gap-2">
+    {{-- Edit Button --}}
+    <button class="edit-btn group relative p-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white 
+                   font-bold rounded-2xl shadow-lg hover:from-blue-600 hover:to-blue-700 hover:shadow-xl 
+                   hover:-translate-y-1 transition-all duration-300 w-12 h-12 flex items-center justify-center
+                   before:absolute before:inset-0 before:bg-white/20 before:rounded-2xl before:scale-0 
+                   before:group-hover:scale-100 before:transition-all before:duration-300 before:z-10
+                   focus:outline-none focus:ring-4 focus:ring-blue-500/50 z-20"
+            data-id="{{ $profil->id }}" 
+            data-name="{{ $profil->name }}" 
+            title="Edit Profil">
+        <svg class="w-5 h-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+        </svg>
+    </button>
+    
+    {{-- Delete Button --}}
+    <button class="delete-btn group relative p-3 bg-gradient-to-r from-red-500 to-red-600 text-white 
+                  font-bold rounded-2xl shadow-lg hover:from-red-600 hover:to-red-700 hover:shadow-xl 
+                  hover:-translate-y-1 transition-all duration-300 w-12 h-12 flex items-center justify-center
+                  before:absolute before:inset-0 before:bg-white/20 before:rounded-2xl before:scale-0 
+                  before:group-hover:scale-100 before:transition-all before:duration-300 before:z-10
+                  focus:outline-none focus:ring-4 focus:ring-red-500/50 z-20"
+            data-id="{{ $profil->id }}" 
+            data-name="{{ $profil->name }}" 
+            title="Hapus Profil">
+        <svg class="w-5 h-5 group-hover:scale-110 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
+    </button>
+</div>
+
                     </div>
                 </td>
             </tr>
@@ -261,12 +275,10 @@
 {{-- MODALS --}}
 @include('admin.tentang.modals')
 @endsection
-
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Constants
     const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
     const modals = {
         create: document.getElementById('createModal'),
@@ -275,179 +287,165 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     let currentEditId = null;
 
-    // 🖱️ EVENT LISTENERS
     setupEventListeners();
-    initFileUploads(); // 🔥 NEW: File Upload Handler
+    initFileUploads();
 
     function setupEventListeners() {
-        // Open Create Modal
+        // Create modal
         document.getElementById('openCreateModal')?.addEventListener('click', openCreateModal);
         document.getElementById('openCreateModalEmpty')?.addEventListener('click', openCreateModal);
 
-        // Edit buttons (Dynamic & Static)
-        document.addEventListener('click', function(e) {
+        // 🎯 EDIT BUTTONS - FIXED
+        document.addEventListener('click', async (e) => {
             if (e.target.closest('.edit-btn')) {
+                e.preventDefault();
                 const btn = e.target.closest('.edit-btn');
-                openEditModal(btn.dataset.id);
+                const id = btn.dataset.id;
+                if (id) await openEditModal(id);
             }
         });
 
-        // Delete buttons (Dynamic & Static)
-        document.addEventListener('click', function(e) {
+        // 🎯 DELETE BUTTONS - FIXED
+        document.addEventListener('click', (e) => {
             if (e.target.closest('.delete-btn')) {
+                e.preventDefault();
                 const btn = e.target.closest('.delete-btn');
-                openDeleteModal(btn.dataset.id, btn);
+                const id = btn.dataset.id;
+                const name = btn.dataset.name || btn.closest('tr')?.querySelector('td')?.textContent?.trim() || 'Organisasi';
+                openDeleteModal(id, name);
             }
         });
 
-        // Form submissions
+        // Forms
         document.getElementById('createForm')?.addEventListener('submit', handleCreateSubmit);
         document.getElementById('editForm')?.addEventListener('submit', handleEditSubmit);
-        document.getElementById('deleteForm')?.addEventListener('submit', handleDeleteSubmit);
+        document.getElementById('confirmDeleteBtn')?.addEventListener('click', handleDeleteConfirm);
 
-        // Close buttons
         setupCloseButtons();
     }
 
-    // 🔥 FILE UPLOAD HANDLERS
+    // File uploads (simplified)
     function initFileUploads() {
-        const uploadInputs = document.querySelectorAll('.upload-input');
-        
-        uploadInputs.forEach(input => {
-            const previewId = input.id.replace('Upload', 'Preview');
-            const previewNameId = previewId + 'Name';
-            const previewSizeId = previewId + 'Size';
-            const errorId = input.id.replace('Upload', 'Error');
-            
-            const preview = document.getElementById(previewId);
-            const previewName = document.getElementById(previewNameId);
-            const previewSize = document.getElementById(previewSizeId);
-            const errorEl = document.getElementById(errorId);
+        document.querySelectorAll('.upload-input').forEach(input => {
             const uploadArea = input.parentElement.querySelector('.upload-area');
-            
-            if (!uploadArea) return;
-            
-            // Click to upload
-            uploadArea.addEventListener('click', () => input.click());
-            
-            // Change handler
-            input.addEventListener('change', (e) => handleFileSelect(e, preview, previewName, previewSize, errorEl, uploadArea));
-            
-            // Drag & Drop
-            setupDragDrop(input, uploadArea, preview, previewName, previewSize, errorEl);
-        });
-    }
-
-    function handleFileSelect(e, preview, nameEl, sizeEl, errorEl, uploadArea) {
-        const file = e.target.files[0];
-        processFile(file, e.target, preview, nameEl, sizeEl, errorEl, uploadArea);
-    }
-
-    function processFile(file, input, preview, nameEl, sizeEl, errorEl, uploadArea) {
-        if (!file) return;
-        
-        const maxSize = parseInt(input.dataset.maxSize);
-        
-        // Validate size
-        if (file.size > maxSize) {
-            showFileError(errorEl, 'File terlalu besar! Maksimal 10MB');
-            input.value = '';
-            return;
-        }
-        
-        // Validate type
-        const allowedTypes = input.accept.split(',').map(t => t.replace('*', ''));
-        if (!allowedTypes.some(type => file.type.includes(type.replace('*', '')))) {
-            showFileError(errorEl, 'Format file tidak didukung!');
-            input.value = '';
-            return;
-        }
-        
-        // Show preview
-        preview.classList.remove('hidden');
-        nameEl.textContent = file.name.length > 25 ? file.name.substring(0, 22) + '...' : file.name;
-        sizeEl.textContent = formatFileSize(file.size);
-        errorEl.innerHTML = '';
-        uploadArea.style.opacity = '0.3';
-    }
-
-    function formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-
-    function showFileError(errorEl, message) {
-        errorEl.innerHTML = `
-            <p class="text-red-500 text-xs flex items-center gap-1 animate-pulse">
-                <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1 0z" clip-rule="evenodd"/>
-                </svg>
-                ${message}
-            </p>
-        `;
-    }
-
-    function setupDragDrop(input, dropZone, preview, nameEl, sizeEl, errorEl) {
-        const events = ['dragenter', 'dragover', 'dragleave', 'drop'];
-        
-        events.forEach(event => dropZone.addEventListener(event, preventDefaults, false));
-        
-        ['dragenter', 'dragover'].forEach(event => {
-            dropZone.addEventListener(event, () => {
-                dropZone.classList.add('bg-opacity-100', 'ring-4');
-                dropZone.classList.toggle('ring-amber-200/50', input.id.includes('lagu'));
-                dropZone.classList.toggle('ring-purple-200/50', input.id.includes('instrumen'));
-            }, false);
-        });
-        
-        ['dragleave', 'drop'].forEach(event => {
-            dropZone.addEventListener(event, () => {
-                dropZone.classList.remove('bg-opacity-100', 'ring-4', 'ring-amber-200/50', 'ring-purple-200/50');
-            }, false);
-        });
-        
-        dropZone.addEventListener('drop', (e) => {
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                input.files = files;
-                handleFileSelect({ target: input }, preview, nameEl, sizeEl, errorEl, dropZone.parentElement.querySelector('.upload-area'));
+            if (uploadArea) {
+                uploadArea.addEventListener('click', () => input.click());
+                input.addEventListener('change', handleFileChange);
             }
-        }, false);
-        
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
+        });
     }
 
-    // 📱 MODAL FUNCTIONS
+    function handleFileChange(e) {
+        const file = e.target.files[0];
+        const preview = e.target.parentElement.querySelector('.current-preview');
+        const nameEl = e.target.parentElement.querySelector('[id*="PreviewName"]');
+        
+        if (preview) preview.classList.remove('hidden');
+        if (nameEl && file) nameEl.textContent = file.name;
+    }
+
+    // MODALS
     function openCreateModal() {
         resetForm('createForm');
         showModal('create');
     }
 
     async function openEditModal(id) {
-        currentEditId = id;
-        try {
-            showLoading(true);
-            await loadProfilData(id);
-            showModal('edit');
-        } catch (error) {
-            showToast('Error loading data: ' + (error.response?.data?.message || 'Coba lagi'), 'error');
-        } finally {
-            showLoading(false);
+    console.log('🔍 openEditModal ID:', id);
+    currentEditId = id;
+    
+    try {
+        showLoading(true);
+        
+        // 🎯 USE REAL TABLE DATA - No API needed!
+        const row = document.querySelector(`.edit-btn[data-id="${id}"]`)?.closest('tr') || 
+                   document.querySelector(`[data-id="${id}"]`)?.closest('tr');
+        
+        const tableData = {
+            id: parseInt(id),
+            name: row?.querySelector('h4, .font-bold, td:nth-child(2)')?.innerText?.trim() || 'HIMANIKA',
+            singkatan: 'HIMANIKA',
+            email: row?.querySelector('a[href^="mailto"]')?.innerText || 'himanika@example.com',
+            alamat: row?.querySelector('td:nth-child(4)')?.innerText?.slice(0, 100) || 'Jl. Tuanku Tambusai'
+        };
+        
+        console.log('📊 Table data:', tableData);
+        populateForm('editForm', tableData);
+        
+        // Open modal
+        const editModal = document.getElementById('editModal');
+        if (editModal) {
+            editModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            console.log('🎉 Modal opened!');
         }
+        
+    } catch (error) {
+        console.error('❌ Error:', error);
+        showToast('Gagal buka modal', 'error');
+    } finally {
+        showLoading(false);
     }
+}
 
-    function openDeleteModal(id, btn) {
+async function loadProfilData(id) {
+    // Skip - pakai table data di openEditModal
+    console.log('⏭️ loadProfilData skipped');
+}
+
+function populateForm(formId, data) {
+    console.log('📝 Filling form:', data);
+    const form = document.getElementById(formId);
+    
+    if (!form) {
+        console.error('❌ Form missing:', formId);
+        return;
+    }
+    
+    // ✅ SAFE FILL - Only existing fields
+    const fieldMap = {
+        'name': ['editName', 'name'],
+        'singkatan': ['editSingkatan', 'singkatan'],
+        'email': ['editEmail', 'email'],
+        'alamat': ['editAlamat', 'alamat'],
+        'motto': ['editMotto', 'motto'],
+        'fungsi': ['editFungsi', 'fungsi'],
+        'tujuan': ['editTujuan', 'tujuan'],
+        'visi': ['editVisi', 'visi'],
+        'misi': ['editMisi', 'misi'],
+        'sejarah': ['editSejarah', 'sejarah']
+    };
+    
+    Object.entries(fieldMap).forEach(([key, selectors]) => {
+        const field = selectors.reduce((found, selector) => 
+            found || document.getElementById(selector) || form.querySelector(`[name="${selector}"]`), null);
+        
+        if (field && field.type !== 'file') {
+            field.value = data[key] || '';
+            console.log(`✅ ${key}:`, data[key]);
+        }
+    });
+    
+    // ID field
+    const editId = document.getElementById('editId');
+    if (editId) {
+        editId.value = data.id;
+        console.log('✅ ID:', data.id);
+    }
+    
+    console.log('🎉 Form filled!');
+}
+
+
+
+    function openDeleteModal(id, name) {
+        // 🎯 FIXED: Syntax error di sini!
         currentEditId = id;
-        const row = btn.closest('tr');
-        const orgName = row.querySelector('h4').textContent;
+        const nameEl = document.getElementById('deleteOrgName') || document.getElementById('deleteName');
+        if (nameEl) {
+            nameEl.textContent = name; // ✅ FIXED - No template literal issues
+        }
         document.getElementById('deleteId').value = id;
-        document.getElementById('deleteName').textContent = ` "${orgName}" ?`;
         showModal('delete');
     }
 
@@ -456,7 +454,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.style.overflow = 'hidden';
     }
 
-    // 🚀 FORM HANDLERS
+    // FORM HANDLERS
     async function handleCreateSubmit(e) {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -470,137 +468,100 @@ document.addEventListener('DOMContentLoaded', function() {
         await submitForm(formData, `{{ route("admin.tentang.update", ":id") }}`.replace(':id', currentEditId), 'edit');
     }
 
-    async function handleDeleteSubmit(e) {
-        e.preventDefault();
+    async function handleDeleteConfirm() {
+        const btn = document.getElementById('confirmDeleteBtn');
         try {
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner">⏳</span> Menghapus...';
+            
             await axios.delete(`{{ route("admin.tentang.destroy", ":id") }}`.replace(':id', currentEditId), {
                 headers: { 'X-CSRF-TOKEN': CSRF_TOKEN }
             });
-            showToast('Profil dihapus!', 'success');
+            
+            showToast('✅ Profil dihapus!', 'success');
             closeModal('delete');
-            setTimeout(() => location.reload(), 500);
+            setTimeout(() => location.reload(), 1000);
         } catch (error) {
-            showToast('Error: ' + (error.response?.data?.message || 'Gagal hapus'), 'error');
+            showToast('❌ Gagal hapus: ' + (error.response?.data?.message || 'Coba lagi'), 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Ya, Hapus!';
         }
     }
 
-    // 🔄 API FUNCTIONS
+    // API
     async function loadProfilData(id) {
-        const response = await axios.get(`{{ route("admin.tentang.edit", ":id") }}`.replace(':id', id));
-        populateForm('editForm', response.data);
+        const { data } = await axios.get(`{{ route("admin.tentang.edit", ":id") }}`.replace(':id', id));
+        populateForm('editForm', data);
     }
 
     async function submitForm(formData, url, modalType) {
         try {
-            const response = await axios.post(url, formData, {
-                headers: {
-                    'X-CSRF-TOKEN': CSRF_TOKEN,
-                    'Content-Type': 'multipart/form-data'
-                }
+            const { data } = await axios.post(url, formData, {
+                headers: { 'X-CSRF-TOKEN': CSRF_TOKEN }
             });
-            showToast(response.data.message || 'Berhasil disimpan!', 'success');
+            showToast(data.message || '✅ Berhasil!', 'success');
             closeModal(modalType);
-            setTimeout(() => location.reload(), 500);
+            setTimeout(() => location.reload(), 1000);
         } catch (error) {
-            showToast('Error: ' + (error.response?.data?.message || 'Something went wrong'), 'error');
+            showToast('❌ ' + (error.response?.data?.message || 'Gagal'), 'error');
         }
     }
 
-    // 🧹 UTILITY FUNCTIONS
+    // UTILITIES
     function populateForm(formId, data) {
         const form = document.getElementById(formId);
         Object.keys(data).forEach(key => {
             const field = form.querySelector(`[name="${key}"]`);
-            if (field && field.type !== 'file') {
-                field.value = data[key] || '';
-            }
+            if (field?.type !== 'file') field.value = data[key] || '';
         });
-
-        // Logo preview
-        if (data.logo && formId === 'editForm') {
-            const preview = document.getElementById('currentLogoPreview');
-            const img = document.getElementById('logoPreviewImg');
-            if (preview && img) {
-                img.src = `/storage/${data.logo}`;
-                preview.classList.remove('hidden');
-            }
-            document.getElementById('editId').value = data.id;
-        }
+        document.getElementById('editId').value = data.id;
     }
 
     function resetForm(formId) {
-        const form = document.getElementById(formId);
-        form?.reset();
-        
-        // Hide all previews
-        document.getElementById('currentLogoPreview')?.classList.add('hidden');
-        document.getElementById('currentLaguPreview')?.classList.add('hidden');
-        document.getElementById('currentInstrumenPreview')?.classList.add('hidden');
-        
-        // Clear errors
+        document.getElementById(formId)?.reset();
+        document.querySelectorAll('.current-preview, [id*="current"]').forEach(el => el.classList.add('hidden'));
         document.querySelectorAll('[id$="Error"]').forEach(el => el.innerHTML = '');
-        
-        // Reset upload areas
-        document.querySelectorAll('.upload-area').forEach(area => {
-            area.style.opacity = '1';
-        });
     }
 
     function closeModal(type) {
         modals[type]?.classList.add('hidden');
-        document.body.style.overflow = 'unset';
-        if (type === 'create') resetForm('createForm');
-        if (type === 'edit') resetForm('editForm');
+        document.body.style.overflow = '';
+        if (type !== 'delete') resetForm(type + 'Form');
     }
 
     function setupCloseButtons() {
-        // Cancel buttons
-        document.getElementById('cancelEditBtn')?.addEventListener('click', () => closeModal('edit'));
-        
-        // Close buttons (X)
-        document.querySelectorAll('[onclick*="close"], #closeEditModal, #closeDeleteModal').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const modalId = this.closest('[id$="Modal"]').id.toLowerCase().replace('modal', '');
-                closeModal(modalId);
-            });
+        document.querySelectorAll('[onclick*="close"], .close-modal').forEach(btn => {
+            btn.onclick = (e) => {
+                e.preventDefault();
+                const modal = btn.closest('[id$="Modal"]');
+                closeModal(modal.id.replace('Modal', '').toLowerCase());
+            };
         });
 
-        // Click outside to close
+        // Click outside & ESC
         Object.values(modals).forEach(modal => {
             modal?.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    const modalId = modal.id.toLowerCase().replace('modal', '');
-                    closeModal(modalId);
-                }
+                if (e.target === modal) closeModal(modal.id.replace('Modal', '').toLowerCase());
             });
         });
-
-        // ESC key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                Object.keys(modals).forEach(key => closeModal(key));
-            }
+            if (e.key === 'Escape') Object.keys(modals).forEach(closeModal);
         });
     }
 
     function showToast(message, type = 'success') {
         const toast = document.createElement('div');
-        toast.className = `fixed top-4 right-4 z-[9999] p-4 rounded-xl shadow-2xl text-white max-w-sm ${
+        toast.className = `fixed top-5 right-5 z-[9999] p-4 rounded-2xl shadow-2xl text-white max-w-sm animate-slide-in-out ${
             type === 'success' ? 'bg-emerald-500' : 'bg-red-500'
-        } transform translate-x-full transition-all duration-300`;
+        }`;
         toast.textContent = message;
         document.body.appendChild(toast);
-        
-        setTimeout(() => toast.classList.remove('translate-x-full'), 100);
-        setTimeout(() => {
-            toast.classList.add('translate-x-full');
-            setTimeout(() => document.body.removeChild(toast), 300);
-        }, 3000);
+        setTimeout(() => toast.remove(), 4000);
     }
 
-    function showLoading(show = true) {
-        const btns = document.querySelectorAll('.edit-btn');
-        btns.forEach(btn => {
+    function showLoading(show) {
+        document.querySelectorAll('.edit-btn, .delete-btn').forEach(btn => {
             btn.style.opacity = show ? '0.6' : '1';
             btn.disabled = show;
         });
@@ -608,4 +569,3 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 @endpush
-

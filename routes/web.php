@@ -18,11 +18,15 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\User\DashboardUserController;
-use App\Http\Controllers\User\PendaftaranController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\User\KegiatanUserController;
+use App\Http\Controllers\User\MasukkanController;
+use App\Http\Controllers\User\PendaftaranUserController;
+use App\Http\Controllers\User\StrukturController;
+use App\Http\Controllers\User\TentangUserController;
+use App\Http\Controllers\User\EventUserController;
+use App\Http\Controllers\User\AcaraUserController;
 use App\Http\Controllers\LandingController;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -64,9 +68,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
         Route::put('/', [ProfileController::class, 'update'])->name('update');
-        // password edit
-       Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.avatar.upload');
-        });
+        Route::post('/avatar', [ProfileController::class, 'uploadAvatar'])->name('avatar.upload');
+    });
     
     // Settings
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
@@ -89,112 +92,94 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/stats/{type}', [StatsController::class, 'getStatsDetail'])->name('stats.detail');
     });
-    
+
     // ========================================
-    // Admin Resources (Resource Controllers)
+    // Admin Resources - RESOURCEFUL & CONSISTENT
     // ========================================
-    
-    // Kegiatan
+
+    // Kegiatan (Resourceful)
+    Route::resource('admin/kegiatan', KegiatanAdminController::class, [
+        'names' => 'admin.kegiatan',
+        'parameters' => ['kegiatan' => 'kegiatan']
+    ])->except(['show', 'edit', 'create']);
     Route::prefix('admin/kegiatan')->name('admin.kegiatan.')->group(function () {
-        Route::get('/', [KegiatanAdminController::class, 'index'])->name('index');
-        Route::post('/', [KegiatanAdminController::class, 'store'])->name('store');
         Route::get('/data', [KegiatanAdminController::class, 'data'])->name('data');
         Route::post('/{kegiatan}/status', [KegiatanAdminController::class, 'toggleStatus'])->name('toggleStatus');
     });
-    Route::put('admin/kegiatan/{kegiatan}', [KegiatanAdminController::class, 'update'])->name('admin.kegiatan.update');
-    Route::delete('admin/kegiatan/{kegiatan}', [KegiatanAdminController::class, 'destroy'])->name('admin.kegiatan.destroy');
-    
-    // Acara
-    Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('acara', [AcaraAdminController::class, 'index'])->name('acara.index');
-    Route::post('acara', [AcaraAdminController::class, 'store'])->name('acara.store');
-    Route::put('acara/{acara}', [AcaraAdminController::class, 'update'])->name('acara.update');
-    Route::post('acara/{acara}/toggle-status', [AcaraAdminController::class, 'toggleStatus'])->name('acara.toggle-status');
-    Route::delete('acara/{acara}', [AcaraAdminController::class, 'destroy'])->name('acara.destroy');
-    Route::post('/acara/data', [AcaraAdminController::class, 'data'])->name('acara.data');
-});
 
-    
-    // Events
+    // Acara (Resourceful)
+    Route::resource('admin/acara', AcaraAdminController::class, [
+        'names' => 'admin.acara', 
+        'parameters' => ['acara' => 'acara']
+    ])->except(['show', 'edit', 'create']);
+    Route::prefix('admin/acara')->name('admin.acara.')->group(function () {
+        Route::post('/data', [AcaraAdminController::class, 'data'])->name('data');
+    });
+
+    // Events (Resourceful)
+    Route::resource('admin/events', EventAdminController::class, [
+        'names' => 'admin.events',
+        'parameters' => ['event' => 'event']
+    ])->except(['show', 'edit', 'create']);
     Route::prefix('admin/events')->name('admin.events.')->group(function () {
-        Route::get('/', [EventAdminController::class, 'index'])->name('index');
-        Route::post('/', [EventAdminController::class, 'store'])->name('store');
         Route::get('/data', [EventAdminController::class, 'data'])->name('data');
     });
-    Route::put('admin/events/{event}', [EventAdminController::class, 'update'])->name('admin.events.update');
-    Route::delete('admin/events/{event}', [EventAdminController::class, 'destroy'])->name('admin.events.destroy');
-    
-    // Laporan
+
+    // Laporan (Resourceful)
+    Route::resource('admin/laporan', LaporanAdminController::class, [
+        'names' => 'admin.laporan',
+        'parameters' => ['laporan' => 'laporan']
+    ])->except(['show', 'edit', 'create']);
     Route::prefix('admin/laporan')->name('admin.laporan.')->group(function () {
-        Route::get('/', [LaporanAdminController::class, 'index'])->name('index');
-        Route::post('/', [LaporanAdminController::class, 'store'])->name('store');
         Route::get('/data', [LaporanAdminController::class, 'data'])->name('data');
         Route::get('/{laporan}/download', [LaporanAdminController::class, 'download'])->name('download');
     });
-    Route::put('admin/laporan/{laporan}', [LaporanAdminController::class, 'update'])->name('admin.laporan.update');
-    Route::delete('admin/laporan/{laporan}', [LaporanAdminController::class, 'destroy'])->name('admin.laporan.destroy');
-    
-    // Keuangan
+
+    // Keuangan (Resourceful)
+    Route::resource('admin/keuangan', KeuanganAdminController::class, [
+        'names' => 'admin.keuangan',
+        'parameters' => ['keuangan' => 'keuangan']
+    ])->except(['show', 'edit', 'create']);
     Route::prefix('admin/keuangan')->name('admin.keuangan.')->group(function () {
-        Route::get('/', [KeuanganAdminController::class, 'index'])->name('index');
-        Route::get('/create', [KeuanganAdminController::class, 'create'])->name('create');
-        Route::post('/', [KeuanganAdminController::class, 'store'])->name('store');
-        Route::get('/{keuangan}', [KeuanganAdminController::class, 'show'])->name('show');
-        Route::get('/{keuangan}/edit', [KeuanganAdminController::class, 'edit'])->name('edit');
+        Route::get('/data', [KeuanganAdminController::class, 'data'])->name('data');
         Route::post('/{keuangan}/status', [KeuanganAdminController::class, 'toggleStatus'])->name('toggleStatus');
         Route::get('/{keuangan}/download', [KeuanganAdminController::class, 'download'])->name('download');
-        Route::get('/data', [KeuanganAdminController::class, 'data'])->name('data');
-        Route::delete('/keuangan/{keuangan}', [KeuanganAdminController::class, 'destroy'])->name('destroy');
+        Route::get('/export/{format}', [KeuanganAdminController::class, 'export'])->name('export');
     });
-    Route::put('admin/keuangan/{keuangan}', [KeuanganAdminController::class, 'update'])->name('admin.keuangan.update');
-    Route::delete('admin/keuangan/{keuangan}', [KeuanganAdminController::class, 'destroy'])->name('admin.keuangan.destroy');
-    // export keuangan
-    Route::get('/admin/keuangan/export/{format}', [KeuanganAdminController::class, 'export'])->name('admin.keuangan.export');
-    
-    // ========================================
-    // Admin Single Pages
-    // ========================================
-    
-    // Tentang (Single)
-    Route::prefix('admin/tentang')->name('admin.tentang.')->group(function () {
-        Route::get('/', [TentangController::class, 'index'])->name('index');
-        Route::post('/', [TentangController::class, 'store'])->name('store');
-        Route::get('/edit', [TentangController::class, 'edit'])->name('edit');
-        Route::put('/', [TentangController::class, 'update'])->name('update');
-        Route::delete('/', [TentangController::class, 'destroy'])->name('destroy');
-    });
-    
-    // Struktur
+
+    // TENTANG - FIXED FOR MODAL (Resourceful)
+    Route::resource('admin/tentang', TentangController::class, [
+        'names' => 'admin.tentang',
+        'parameters' => ['tentang' => 'profil']
+    ])->only(['index','edit', 'store', 'update', 'destroy']);
+
+    // Struktur (Resourceful)
+    Route::resource('admin/struktur', StrukturAdminController::class, [
+        'names' => 'admin.struktur',
+        'parameters' => ['struktur' => 'struktur']
+    ])->except(['show', 'edit', 'create']);
     Route::prefix('admin/struktur')->name('admin.struktur.')->group(function () {
-        Route::get('/', [StrukturAdminController::class, 'index'])->name('index');
-        Route::post('/', [StrukturAdminController::class, 'store'])->name('store');
         Route::get('/users', [StrukturAdminController::class, 'availableusers'])->name('users');
     });
-    Route::put('admin/struktur/{struktur}', [StrukturAdminController::class, 'update'])->name('admin.struktur.update');
-    Route::delete('admin/struktur/{struktur}', [StrukturAdminController::class, 'destroy'])->name('admin.struktur.destroy');
-    
+
     // Legalitas
     Route::get('/admin/legalitas', [LegalitasAdminController::class, 'legalitas'])->name('admin.legalitas.index');
-    
-    // Pendaftaran
-    Route::get('/admin/pendaftaran', [PendaftaranAdminController::class, 'index'])->name('admin.pendaftaran.index');
-    Route::get('/admin/pendaftaran/create', [PendaftaranAdminController::class, 'create'])->name('admin.pendaftaran.create');
-    Route::post('/admin/pendaftaran', [PendaftaranAdminController::class, 'store'])->name('admin.pendaftaran.store');
-    Route::get('/admin/pendaftaran/{pendaftaran}', [PendaftaranAdminController::class, 'show'])->name('admin.pendaftaran.show');
-    Route::post('/admin/pendaftaran/{pendaftaran}/status', [PendaftaranAdminController::class, 'toggleStatus'])->name('admin.pendaftaran.toggleStatus');
-    Route::put('/admin/pendaftaran/{pendaftaran}', [PendaftaranAdminController::class, 'update'])->name('admin.pendaftaran.update');
-    Route::delete('/admin/pendaftaran/{pendaftaran}', [PendaftaranAdminController::class, 'destroy'])->name('admin.pendaftaran.destroy');
-    // download bukti
-    Route::get('/admin/pendaftaran/{pendaftaran}/download', [PendaftaranAdminController::class, 'download'])->name('admin.pendaftaran.download-bukti');
-    
-    // Masukan
-    Route::prefix('admin/masukan')->name('admin.masukan.')->group(function () {
-        Route::get('/', [MasukkanAdminController::class, 'index'])->name('index');
-        Route::post('/', [MasukkanAdminController::class, 'store'])->name('store');
-        Route::get('/{masukan}', [MasukkanAdminController::class, 'show'])->name('show');
+
+    // Pendaftaran (Resourceful)
+    Route::resource('admin/pendaftaran', PendaftaranAdminController::class, [
+        'names' => 'admin.pendaftaran',
+        'parameters' => ['pendaftaran' => 'pendaftaran']
+    ])->except(['edit', 'create']);
+    Route::prefix('admin/pendaftaran')->name('admin.pendaftaran.')->group(function () {
+        Route::get('/download', [PendaftaranAdminController::class, 'download'])->name('download-bukti');
+        Route::post('/{pendaftaran}/status', [PendaftaranAdminController::class, 'toggleStatus'])->name('toggleStatus');
     });
-    Route::put('admin/masukan/{masukan}', [MasukkanAdminController::class, 'update'])->name('admin.masukan.update');
-    Route::delete('admin/masukan/{masukan}', [MasukkanAdminController::class, 'destroy'])->name('admin.masukan.destroy');
+
+    // Masukan (Resourceful)
+    Route::resource('admin/masukan', MasukkanAdminController::class, [
+        'names' => 'admin.masukan',
+        'parameters' => ['masukan' => 'masukan']
+    ])->except(['edit', 'create']);
 });
 
 /*
@@ -204,34 +189,85 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 */
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/user/dashboard', [DashboardUserController::class, 'index'])->name('user.dashboard.index');
-    
+
+    // tentang
+    Route::prefix('user')->name('user.')->group(function () {
+       Route::get('tentang', [TentangUserController::class, 'index'])->name('tentang.index'); 
+    });
+    // struktur
+    // ❌ WRONG - Sintaks resource rusak
+    Route::prefix('user')->name('user.')->group(function () {
+        Route::get('struktur', [StrukturController::class, 'index'])->name('struktur.index');
+        Route::get('struktur/{struktur}', [StrukturController::class, 'show'])->name('struktur.show');
+        Route::get('struktur/departemen/{departemen}', [StrukturController::class, 'departemen'])
+            ->name('struktur.departemen'); // Fixed: hapus prefix 'user.' duplikat
+    });
+
+    // kegiatan
+    Route::prefix('user')->name('user.')->group(function () {
+        Route::get('kegiatan', [KegiatanUserController::class, 'index'])->name('kegiatan.index');
+        Route::get('kegiatan/{kegiatan}', [KegiatanUserController::class, 'show'])->name('kegiatan.show');
+        Route::get('kegiatan/departemen/{departemen}', [KegiatanUserController::class, 'departemen'])
+            ->name('kegiatan.departemen'); // Fixed: hapus prefix 'user.' duplikat
+        Route::get('kegiatan/pendaftaran/{kegiatan}', [KegiatanUserController::class, 'pendaftaran'])->name('pendaftaran.kegiatan');
+        Route::post('kegiatan/pendaftaran/{kegiatan}', [KegiatanUserController::class, 'storePendaftaran'])->name('pendaftaran.store');
+    });
+
+    // acara
+    Route::prefix('user')->name('user.')->group(function () {
+        Route::get('acara', [AcaraUserController::class, 'index'])->name('acara.index');
+        Route::get('acara/{acara}', [AcaraUserController::class, 'show'])->name('acara.show');
+        Route::get('acara/pendaftaran/{acara}', [AcaraUserController::class, 'pendaftaran'])->name('acara.pendaftaran');
+        Route::post('acara/pendaftaran/{acara}', [AcaraUserController::class, 'storePendaftaran'])->name('store.pendaftaran');
+    });
+
+    // events
+    Route::prefix('user')->name('user.')->group(function () {
+        Route::get('events', [EventUserController::class, 'index'])->name('events.index');
+        Route::get('events/{events}', [EventUserController::class, 'show'])->name('events.show');
+        Route::get('events/pendaftaran/{event}', [EventUserController::class, 'pendaftaran'])->name('events.pendaftaran');
+        Route::post('events/pendaftaran/{event}', [EventUserController::class, 'storePendaftaran'])->name('events.store');
+    });
+
+    // masukkan
+    Route::prefix('user')->name('user.')->group(function () {
+        Route::get('masukan', [DashboardUserController::class, 'index'])->name('masukkan.index');
+        Route::get('masukan/{masukan}', [DashboardUserController::class, 'show'])->name('masukan.show');
+    });
+
     // Masukan
-    Route::get('/masukan/create', [DashboardUserController::class, 'create'])->name('masukkan.create');
-    Route::post('/masukan', [DashboardUserController::class, 'store'])->name('masukkan.store');
-    Route::get('/masukan', [DashboardUserController::class, 'index'])->name('masukkan.index');
+    Route::prefix('masukan')->name('masukan.')->group(function () {
+        Route::get('/', [DashboardUserController::class, 'index'])->name('index');
+        Route::get('/create', [DashboardUserController::class, 'create'])->name('create');
+        Route::post('/', [DashboardUserController::class, 'store'])->name('store');
+    });
+    // Events
+    Route::prefix('events')->name('events.')->group(function () {
+        Route::get('/', [DashboardUserController::class, 'event'])->name('index');
+        Route::get('/{event}', [DashboardUserController::class, 'event'])->name('show');
+    });
 
-    // Acara
-    Route::get('/acara', [DashboardUserController::class, 'acara'])->name('acaras.index');
-    Route::get('/acara/{acara}', [DashboardUserController::class, 'acara'])->name('acaras.show');
+    Route::prefix('user')->name('user.')->group(function () {
+        Route::get('pendaftaran', [PendaftaranUserController::class, 'index'])->name('pendaftaran.index');
+        Route::get('pendaftaran/create', [PendaftaranUserController::class, 'create'])->name('pendaftaran.create');
+        Route::get('pendaftaran/{pendaftaran}', [PendaftaranUserController::class, 'show'])->name('pendaftaran.show');
+        Route::get('pendaftaran/kegiatan/{pendaftaran}', [PendaftaranUserController::class, 'pendaftaranKegiatan'])->name('pendaftaran.kegiatan');
+    });
 
-    // pendaftaran
-    Route::get('/pendaftaran', [PendaftaranController::class, 'index'])->name('pendaftarans.create');
-    Route::post('/pendaftaran', [PendaftaranController::class, 'pendaftaranStore'])->name('pendaftarans.store');
-    
-    // Event
-    Route::get('/events', [DashboardUserController::class, 'event'])->name('events.index');
-    Route::get('/events/{event}', [DashboardUserController::class, 'event'])->name('events.show');
+    // masukkan
+    Route::prefix('masukkan')->name('masukkan.')->group(function () {
+        Route::get('/', [MasukkanController::class, 'masukkan'])->name('index');
+        Route::get('/create', [MasukkanController::class, 'create'])->name('create');
+        Route::get('/{masukkan}', [MasukkanController::class, 'masukkan'])->name('show');
+        Route::post('/', [MasukkanController::class, 'masukkanStore'])->name('store');
+    });
 });
 
-// superadmin routes
+/*
+|--------------------------------------------------------------------------
+| Superadmin Routes
+|--------------------------------------------------------------------------
+*/
 Route::middleware(['auth', 'role:superadmin'])->group(function () {
     Route::get('/superadmin/dashboard', [DashboardAdminController::class, 'index'])->name('superadmin.dashboard.index');
-
-    Route::prefix('superadmin/tentang')->name('superadmin.tentang.')->group(function () {
-        Route::get('/', [TentangController::class, 'index'])->name('index');
-        Route::post('/', [TentangController::class, 'store'])->name('store');
-        Route::get('/edit', [TentangController::class, 'edit'])->name('edit');
-        Route::put('/', [TentangController::class, 'update'])->name('update');
-        Route::delete('/', [TentangController::class, 'destroy'])->name('destroy');
-    });
 });

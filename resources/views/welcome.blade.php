@@ -40,8 +40,7 @@
           text-slate-900 dark:text-slate-100 backdrop-blur-xl px-8 py-6 rounded-3xl 
           border border-slate-200/50 dark:border-slate-700/50 shadow-2xl 
           hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-    {{ $profils->sejarah ? Str::limit(strip_tags($profils->sejarah), 439) : 'Himpunan Mahasiswa Teknik Informatika Universitas Riau' }}
-</p>
+          {{ $profils->moto ?? 'Membangun generasi IT visioner melalui event dan workshop berkualitas' }}
 
                     <p class="text-base md:text-lg lg:text-xl font-light max-w-lg mx-auto lg:mx-0 
                         text-white/90 dark:text-slate-800/90 drop-shadow 
@@ -374,8 +373,8 @@
                     
                     @if($kahim)
                         <div class="avatar-container w-28 h-28 mx-auto mb-6 relative z-10 overflow-hidden rounded-2xl shadow-2xl ring-4 ring-white/50">
-                            @if($kahim->avatar && Storage::disk('public')->exists($kahim->avatar))
-                                <img src="{{ Storage::url($kahim->avatar) }}" alt="{{ $kahim->user->name }}" class="w-full h-full object-cover hover:scale-105 transition-all duration-300">
+                            @if($kahim->avatar)
+                                <img src="{{($kahim->avatar) }}" alt="{{ $kahim->user->name }}" class="w-full h-full object-cover hover:scale-105 transition-all duration-300">
                             @else
                                 <div class="w-full h-full bg-gradient-to-br from-emerald-400/80 to-teal-400/80 flex items-center justify-center backdrop-blur-md">
                                     <i class="fas fa-crown text-4xl text-white shadow-xl"></i>
@@ -408,8 +407,8 @@
                     @php $wakahim = $strukturs->where('jabatan', 'wakahim')->first(); @endphp
                     @if($wakahim)
                         <div class="w-20 h-20 mx-auto mb-4 relative overflow-hidden rounded-xl shadow-xl ring-4 ring-white/50">
-                            @if(Storage::disk('public')->exists($wakahim->avatar))
-                                <img src="{{ Storage::url($wakahim->avatar) }}" alt="{{ $wakahim->user->name }}" class="w-full h-full object-cover hover:scale-105">
+                            @if($wakahim->avatar)
+                                <img src="{{$wakahim->avatar }}" alt="{{ $wakahim->user->name }}" class="w-full h-full object-cover hover:scale-105">
                             @else
                                 <div class="w-full h-full bg-gradient-to-br from-purple-400/80 to-pink-400/80 flex items-center justify-center backdrop-blur-md">
                                     <i class="fas fa-user-tie text-xl text-white"></i>
@@ -432,8 +431,8 @@
                     @php $sekretaris = $strukturs->where('jabatan', 'sekretaris')->first(); @endphp
                     @if($sekretaris)
                         <div class="w-20 h-20 mx-auto mb-4 relative overflow-hidden rounded-xl shadow-xl ring-4 ring-white/50">
-                            @if(Storage::disk('public')->exists($sekretaris->avatar))
-                                <img src="{{ Storage::url($sekretaris->avatar) }}" alt="{{ $sekretaris->user->name }}" class="w-full h-full object-cover hover:scale-105">
+                            @if($sekretaris->avatar)
+                                <img src="{{ $sekretaris->avatar }}" alt="{{ $sekretaris->user->name }}" class="w-full h-full object-cover hover:scale-105">
                             @else
                                 <div class="w-full h-full bg-gradient-to-br from-blue-400/80 to-indigo-400/80 flex items-center justify-center backdrop-blur-md">
                                     <i class="fas fa-file-signature text-xl text-white"></i>
@@ -456,8 +455,8 @@
                     @php $bendahara = $strukturs->where('jabatan', 'bendahara')->first(); @endphp
                     @if($bendahara)
                         <div class="w-20 h-20 mx-auto mb-4 relative overflow-hidden rounded-xl shadow-xl ring-4 ring-white/50">
-                            @if(Storage::disk('public')->exists($bendahara->avatar))
-                                <img src="{{ Storage::url($bendahara->avatar) }}" alt="{{ $bendahara->user->name }}" class="w-full h-full object-cover hover:scale-105">
+                            @if($bendahara->avatar)
+                                <img src="{{ $bendahara->avatar }}" alt="{{ $bendahara->user->name }}" class="w-full h-full object-cover hover:scale-105">
                             @else
                                 <div class="w-full h-full bg-gradient-to-br from-red-400/80 to-rose-400/80 flex items-center justify-center backdrop-blur-md">
                                     <i class="fas fa-wallet text-xl text-white"></i>
@@ -490,8 +489,8 @@
                         <div class="space-y-3">
                             @foreach($strukturs->where('departemen', $dep)->take(3) as $anggota)
                                 <div class="flex items-center space-x-3 p-3 bg-white/15 backdrop-blur-xl rounded-xl hover:bg-white/25 transition-all group-hover:translate-y-[-1px]">
-                                    @if(Storage::disk('public')->exists($anggota->avatar))
-                                        <img src="{{ Storage::url($anggota->avatar) }}" alt="{{ $anggota->user->name }}" class="w-12 h-12 rounded-xl object-cover ring-2 ring-white/50 shadow-lg">
+                                    @if($anggota->avatar)
+                                        <img src="{{$anggota->avatar }}" alt="{{ $anggota->user->name }}" class="w-12 h-12 rounded-xl object-cover ring-2 ring-white/50 shadow-lg">
                                     @else
                                         <div class="w-12 h-12 bg-gradient-to-br from-{{ $colors[$index] }}-400/90 to-{{ $colors[$index] }}-500/90 rounded-xl flex items-center justify-center text-xs font-black text-white shadow-lg">
                                             {{ substr($anggota->user->name, 0, 2) }}
@@ -583,8 +582,8 @@
                 <div class="group bg-white/95 dark:bg-slate-800/95 rounded-2xl shadow-xl hover:shadow-2xl hover:-translate-y-3 transition-all duration-700 overflow-hidden border border-gray-200/50 dark:border-slate-700/50 backdrop-blur-sm">
                     {{-- Header Image/Icon --}}
                     <div class="h-48 lg:h-56 relative group-hover:scale-105 transition-transform duration-700 overflow-hidden">
-                        @if($kegiatan->image && Storage::disk('public')->exists($kegiatan->image))
-                            <img src="{{ Storage::url($kegiatan->image) }}" alt="{{ $kegiatan->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        @if($kegiatan->image )
+                            <img src="{{ $kegiatan->image }}" alt="{{ $kegiatan->name }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                         @else
                             @php 
@@ -810,7 +809,7 @@
                     <!-- Acara Image -->
                     <div class="mb-6 rounded-2xl overflow-hidden shadow-lg group-hover:scale-[1.02] transition-transform duration-300">
                         @if($acara->image)
-                            <img src="{{ Storage::url($acara->image) }}" 
+                            <img src="{{ $acara->image }}" 
                                  alt="{{ $acara->name }}" 
                                  class="w-full h-48 object-cover">
                         @else
@@ -835,7 +834,7 @@
 
                     <!-- Acara Description -->
                     <p class="text-gray-700 dark:text-slate-300 group-hover:text-pink-500 transition-colors duration-300">
-                        {{ Str::limit($acara->description, 100) }}
+                        {{ \Illuminate\Support\Str::limit($acara->description, 100) }}
                     </p>
                 </div>
             @empty
@@ -848,7 +847,7 @@
         </div>
 
         <div class="text-center">
-            <a href="{{ route('acaras.index') }}" class="inline-flex items-center font-bold text-lg bg-gradient-to-r from-pink-500 to-orange-600 dark:from-pink-400 dark:to-orange-400 text-white px-6 py-3 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+            <a href="#acara" class="inline-flex items-center font-bold text-lg bg-gradient-to-r from-pink-500 to-orange-600 dark:from-pink-400 dark:to-orange-400 text-white px-6 py-3 rounded-xl hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
                 Lihat Semua Acara
                 <i class="fas fa-arrow-right ml-2"></i>
             </a>
@@ -876,7 +875,7 @@
                     <!-- Event Image -->
                     <div class="mb-6 rounded-2xl overflow-hidden shadow-lg group-hover:scale-[1.02] transition-transform duration-300">
                         @if($event->image)
-                            <img src="{{ Storage::url($event->image) }}" 
+                            <img src="{{ $event->image }}" 
                                  alt="{{ $event->name }}" 
                                  class="w-full h-48 object-cover">
                         @else
